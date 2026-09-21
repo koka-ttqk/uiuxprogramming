@@ -1,3 +1,10 @@
+body {
+    color: #292a31;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
 .feature-list {
     list-style-type: none;
     padding: 0;
