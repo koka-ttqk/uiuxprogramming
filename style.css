@@ -102,6 +102,20 @@ p {
     border-radius: 12px;
 }
 
+form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #D9CFAF;
+    border-radius: 10px;
+}
+
 button {
     padding: 12px 18px;
     border: 0;
@@ -110,6 +124,11 @@ button {
     background-color: #F2A93B;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
+}
+
+input,
+button {
+    font: inherit;
 }
 
 button:hover {
