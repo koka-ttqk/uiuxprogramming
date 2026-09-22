@@ -3,6 +3,25 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 18px;
     line-height: 1.6;
+    margin: 0;
+    background-color: #FFFCF5;
+}
+
+header,
+main,
+footer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+header {
+    padding-top: 48px;
+    padding-bottom: 32px;
+}
+
+section {
+    margin-top: 56px;
 }
 
 nav a {
