@@ -33,6 +33,11 @@ section {
     margin-top: 56px;
 }
 
+footer {
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
 nav {
     display: flex;
     gap: 24px;
