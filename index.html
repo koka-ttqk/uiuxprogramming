@@ -77,11 +77,16 @@
 
     <section id="subscribe" class="subscribe-card">
       <h2>문의 사항</h2>
-      <form>
+      <form id="subscribe-form">
         <label for="email">이메일</label>
         <input type="email" id="email" name="email">
-        <button type="submit">문의 사항 전달하기</button>
+        <button id="subscribeButton" type="submit">문의 사항 전달하기</button>
       </form>
+
+      <p id="subscribeMessage" aria-live="polite">
+        이메일을 입력한 뒤 신청해주세요.
+      </p>
+      
     </section>
   </main>
 
