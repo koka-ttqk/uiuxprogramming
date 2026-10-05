@@ -4,7 +4,7 @@ let submitCount = 0;
 
 function makeSubcribeMessage(email, subcribed) {
     if (subcribed == true) {
-        return email + "로 신청이 완료되었습니다.";
+        return email + "의 문의 사항 전달이 완료되었습니다.";
     }
     
     return "이메일을 입력한 뒤 신청해주세요.";
@@ -35,7 +35,7 @@ function handleSubscirbe(event) {
 
     subscribeMessage.classList.add("is-success");
 
-    subscribeButton.textContent = "신청 완료";
+    subscribeButton.textContent = "전달 완료";
     subscribeButton.disabled = true;
 }
 
