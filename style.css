@@ -219,6 +219,35 @@ button:active {
     cursor: not-allowed;
 }
 
+body.dark{
+    color: #f4f1ea;
+    background-color: #20232e;
+}
+
+body.dark p,
+body.dark nav a{
+    color: #c9cbd5
+}
+
+body.dark .feature-card,
+body.dark .event-card,
+body.dark .subscribe-card{
+    background-color: #343846;
+    border-color: #454a5b;
+}
+
+#agreeMessage{
+    padding: 12px;
+    border-radius: 10px;
+    background-color: #ecebf2;
+}
+
+#agreeMessage.is-ready{
+    color: #245c3a;
+    background-color: #e7f7ed;
+    font-weight: 700;
+}
+
 /* 웹페이지가 표시되는 가로 폭이 768px 이하일 때만 적용 */
 @media (max-width: 768px){
     body{

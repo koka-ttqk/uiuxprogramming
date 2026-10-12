@@ -47,20 +47,36 @@ const nicknameCount = document.querySelector("#nicknameCount");
 const agreeMessage = document.querySelector("#agreeMessage");
 const startButton = document.querySelector("#startButton");
 
-function handleThemeClick(event) {
-    console.log("click:", event.currentTarget.id);
+function handleThemeClick() {
+    const isDark = document.body.classList.toggle("dark");
+
+    themeButton.textContent = isDark ? "라이트 테마로 바꾸기" : "다크 테마로 바꾸기"
 }
 
 themeButton.addEventListener("click", handleThemeClick);
 
-function handleNicknameInput(event) {
-    console.log("input:", nicknameInput.value.length);
+function handleNicknameInput() {
+    const maxLength = nicknameInput.maxLength;
+    const currentlength = Math.min(nicknameInput.value.length, maxLength);
+
+    nicknameCount.textContent = currentlength + " / " + maxLength;
 }
 
 nicknameInput.addEventListener("input", handleNicknameInput);
 
 function handleAgreeChange() {
-    console.log("change:", agreeCheck.checked);
+    const agreed = agreeCheck.checked;
+
+    startButton.disabled = !agreed;
+    agreeMessage.textContent = agreed 
+        ? "영어 학습을 시작할 수 있습니다"
+        : "동의 후 영어 학습을 시작할 수 있습니다.";
+
+    if (agreed) {
+        agreeMessage.classList.add("is-ready");
+    } else {
+        agreeMessage.classList.remove("is-ready");
+    }
 }
 
 agreeCheck.addEventListener("change", handleAgreeChange);
