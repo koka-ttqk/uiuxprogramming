@@ -46,22 +46,70 @@
 
     <section id="features">
       <h2>기능 소개</h2>
-      <ul class="feature-list">
-        <li class="feature-card">
-          <h3>오늘의 단어</h3>
-          <p>제공되는 단어의 의미와 실생활에서 적용하는 문장 예시를 확인하며 학습합니다.</p>
-        </li>
 
-        <li class="feature-card">
-          <h3>미니 테스트</h3>
-          <p>학습한 단어를 테스트해봅니다.</p>
-        </li>
+      <div class="tabs" role="tablist" aria-label="기능 선택">
+        <button 
+          id="tab-words" 
+          class="tab is-active" 
+          type="button" 
+          role="tab"
+          aria-selected="true"
+          aria-controls="feature-words"
+          data-target="#feature-words">
+          오늘의 단어
+        </button>
 
-        <li class="feature-card">
-          <h3>스터디</h3>
-          <p>다양한 유형의 그룹 스터디를 살펴보고 신청폼을 작성하여 나에게 맞는 유형의 스터디를 가입합니다.</p>
-        </li>
-      </ul>
+        <button
+          id="tab-test"
+          class="tab"
+          type="button"
+          role="tab"
+          aira-selected="false"
+          aria-controls="feature-test"
+          data-target="#feature-test">
+          미니 테스트
+        </button>
+
+        <button
+          id="tab-study"
+          class="tab"
+          type="button"
+          role="tab"
+          aira-selected="false"
+          aria-controls="feature-study"
+          data-target="#feature-study">
+          스터디
+        </button>
+      </div>
+
+      <div
+        id="feature-words"
+        class="panel is-active"
+        role="tabpanel"
+        aria-labelledby="tap-words">
+        <h3>오늘의 단어</h3>
+        <p>제공되는 단어의 의미와 실생활에서 적용하는 문장 예시를 확인하며 학습합니다.</p>
+      </div>
+
+      <div
+        id="feature-test"
+        class="panel is-active"
+        role="tabpanel"
+        aria-labelledby="tap-test"
+        hidden>
+        <h3>미니 테스트</h3>
+        <p>학습한 단어를 테스트해봅니다.</p>
+      </div>
+
+      <div
+        id="feature-study"
+        class="panel is-active"
+        role="tabpanel"
+        aria-labelledby="tap-study"
+        hidden>
+        <h3>스터디</h3>
+        <p>다양한 유형의 그룹 스터디를 살펴보고 신청폼을 작성하여 나에게 맞는 유형의 스터디를 가입합니다.</p>
+      </div>
     </section>
     
     <section id="steps">
