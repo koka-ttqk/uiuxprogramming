@@ -1,9 +1,9 @@
 const serviceName = "WordMate";
-let isSubcribed = false;
+let isSubscribed = false;
 let submitCount = 0;
 
-function makeSubcribeMessage(email, subcribed) {
-    if (subcribed == true) {
+function makeSubscribeMessage(email, subscribed) {
+    if (subscribed == true) {
         return email + "의 문의 사항 전달이 완료되었습니다.";
     }
     
@@ -27,11 +27,11 @@ function handleSubscirbe(event) {
         return;
     }
 
-    isSubcribed = true;
+    isSubscribed = true;
     submitCount += 1;
 
     subscribeMessage.textContent = 
-        makeSubcribeMessage(subscriberEmail, isSubcribed);
+        makeSubscribeMessage(subscriberEmail, isSubscribed);
 
     subscribeMessage.classList.add("is-success");
 
@@ -40,3 +40,27 @@ function handleSubscirbe(event) {
 }
 
 subscribeForm.addEventListener("submit", handleSubscirbe);
+
+const themeButton = document.querySelector("#themeButton");
+const nicknameInput = document.querySelector("#nickname");
+const nicknameCount = document.querySelector("#nicknameCount");
+const agreeMessage = document.querySelector("#agreeMessage");
+const startButton = document.querySelector("#startButton");
+
+function handleThemeClick(event) {
+    console.log("click:", event.currentTarget.id);
+}
+
+themeButton.addEventListener("click", handleThemeClick);
+
+function handleNicknameInput(event) {
+    console.log("input:", nicknameInput.value.length);
+}
+
+nicknameInput.addEventListener("input", handleNicknameInput);
+
+function handleAgreeChange() {
+    console.log("change:", agreeCheck.checked);
+}
+
+agreeCheck.addEventListener("change", handleAgreeChange);

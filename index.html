@@ -75,6 +75,40 @@
       </ol>
     </section>
 
+    <section id="event-practice">
+      <h2>영어 학습 체험하기</h2>
+
+      <div class="event-grid">
+        <article class="event-card">
+          <h3>화면 테마</h3>
+          <button id="themeButton" type="button">다크 테마로 바꾸기</button>
+        </article>
+
+        <article class="event-card">
+          <h3>학습 닉네임</h3>
+          <label for="nickname">닉네임</label>
+          <input type="text" id="nickname" maxlength="10">
+          <p id="nicknameCount" aria-live="polite">0 / 10</p>
+        </article>
+
+        <article class="event-card">
+          <h3>영어 단어 학습 시작</h3>
+          <label class="agree-row">
+            <input type="checkbox" id="agreeCheck">
+            영어 단어 학습을 시작할 준비가 되었습니다.
+          </label>
+          <p id="agreeMessage" aria-live="polite">
+            체크 후 학습을 시작할 수 있습니다.
+          </p>
+          <button id="startButton" type="button" disabled>
+            학습 시작하기
+          </button>
+        </article>
+      </div>
+    </section>
+
+
+
     <section id="subscribe" class="subscribe-card">
       <h2>문의 사항</h2>
       <form id="subscribe-form">
