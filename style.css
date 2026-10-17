@@ -333,8 +333,12 @@ body.dark #learning-dialog {background: #50515f; color: #fff;}
 .learning-flow fieldset[hidden] {display: none;}
 .learning-flow .progress {display: flex; flex-wrap: wrap; gap: 12px;}
 .learning-flow .progress__item.is-active{
-    color: #635bff;
+    color: #F2A93B;
     font-weight: 800;
+}
+
+.learning-flow #word-count {
+    width: 300px;
 }
 
 .learning-flow .error-message{
@@ -343,12 +347,12 @@ body.dark #learning-dialog {background: #50515f; color: #fff;}
     font-weight: 700;
 }
 .learning-flow #word-count.has-error {border-color: #9d243d;}
-.learning-flow #level-range {width: 100%; accent-color: #635bff;}
+.learning-flow #level-range {width: 100%; accent-color: #F2A93B;}
 .learning-flow input[type="checkbox"],
 .learning-flow input[type="radio"] {
     flex: 0 0 auto;
     width: auto;
-    accent-color: #635bff;
+    accent-color: #F2A93B;
 }
 
 .learning-flow .summary-list > div {

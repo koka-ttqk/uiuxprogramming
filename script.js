@@ -70,8 +70,8 @@ function handleAgreeChange() {
 
     startButton.disabled = !agreed;
     agreeMessage.textContent = agreed 
-        ? "영어 학습을 시작할 수 있습니다"
-        : "동의 후 영어 학습을 시작할 수 있습니다.";
+        ? "학습 설정을 시작할 수 있습니다"
+        : "준비 완료를 체크하면 학습 설정을 시작할 수 있습니다.";
 
     if (agreed) {
         agreeMessage.classList.add("is-ready");
@@ -114,4 +114,126 @@ function handleTabClick(event) {
 
 tabs.forEach(function (tab) {
     tab.addEventListener("click", handleTabClick);
+});
+
+const learningFlow = document.querySelector("#learning-flow");
+const flowSteps = learningFlow.querySelectorAll(".step");
+const progressItems = learningFlow.querySelectorAll(".progress__item");
+const countInput = document.querySelector("#word-count");
+const countError = document.querySelector("#count-error");
+const countNext = document.querySelector("#count-next");
+const levelRange = document.querySelector("#level-range");
+const levelValue = document.querySelector("#level-value");
+const reviewOption = document.querySelector("#review-option");
+const reviewOptions = document.querySelector("#review-options");
+const optionPrev = document.querySelector("#option-prev");
+const optionNext = document.querySelector("#option-next");
+const summaryPrev = document.querySelector("#summary-prev");
+const finishButton = document.querySelector("#finish-button");
+const restartButton = document.querySelector("#restart-button");
+const summaryCount = document.querySelector("#summary-count");
+const summaryLevel = document.querySelector("#summary-level");
+const summaryReview = document.querySelector("#summary-review");
+const levelValues = ["초급", "중급", "고급"];
+
+const formData = {
+    count: "", level: "중급", review: false, reviewType: "wrong"
+};
+
+
+function showStep(index) {
+    flowSteps.forEach((step, i) => { step.hidden = i !== index; });
+    progressItems.forEach((item, i) => {
+        item.classList.toggle("is-active", i === index);
+    });
+}
+
+const learningDialog = document.querySelector("#learning-dialog");
+const learningCancel = document.querySelector("#learning-cancel");
+const learningConfirm = document.querySelector("#learning-confirm");
+
+function revokeLearningReady() {
+    agreeCheck.checked = false;
+    learningFlow.hidden = true;
+    handleAgreeChange();
+    agreeCheck.focus();
+}
+
+startButton.addEventListener("click", () => {
+    if (!agreeCheck.checked) return;
+    learningDialog.showModal();
+});
+learningCancel.addEventListener("click", () => {
+    learningDialog.close();
+    revokeLearningReady();
+});
+learningDialog.addEventListener("cancel", revokeLearningReady);
+learningConfirm.addEventListener("click", () => {
+    if (!agreeCheck.checked) return;
+    learningDialog.close();
+    learningFlow.hidden = false;
+    showStep(0);
+    learningFlow.scrollIntoView({ behavior: "smooth" });
+    countInput.focus();
+});
+
+function validateCount() {
+    const value = countInput.value.trim();
+    if (!value || !Number.isInteger(Number(value)) || Number(value) < 1 || Number(value) > 20) {
+        countError.textContent = "1~20 사이의 정수를 입력해 주세요.";
+        countInput.classList.add("has-error");
+        countInput.focus();
+        return false;
+    }
+    countError.textContent = "";
+    countInput.classList.remove("has-error");
+    formData.count = Number(value);
+    return true;
+}
+
+countNext.addEventListener("click", () => {
+    if (!validateCount()) return;
+    showStep(1);
+});
+
+levelRange.addEventListener("input", () => {
+    levelValue.value = levelValues[levelRange.value];
+});
+reviewOption.addEventListener("change", () => {
+    reviewOptions.hidden = !reviewOption.checked;
+});
+
+optionPrev.addEventListener("click", () => showStep(0));
+optionNext.addEventListener("click", () => {
+    formData.level = levelValues[levelRange.value];
+    formData.review = reviewOption.checked;
+    const reviewType = document.querySelector('input[name="review-type"]:checked');
+    formData.reviewType = reviewType.value;
+    summaryCount.textContent = formData.count + "개";
+    summaryLevel.textContent = formData.level;
+    summaryReview.textContent = formData.review
+        ? (formData.reviewType === "wrong" ? "틀린 단어만 다시 풀기" : "전체 단어 다시 풀기")
+        : "미포함";
+    showStep(2);
+});
+
+summaryPrev.addEventListener("click", () => showStep(1));
+finishButton.addEventListener("click", () => showStep(3));
+restartButton.addEventListener("click", () => {
+    formData.count = "";
+    formData.level = "중급";
+    formData.review = false;
+    formData.reviewType = "wrong";
+    countInput.value = "";
+    countError.textContent = "";
+    countInput.classList.remove("has-error");
+    levelRange.value = "1";
+    levelValue.value = "중급";
+    reviewOption.checked = false;
+    reviewOptions.hidden = true;
+    document.querySelector('input[name="review-type"][value="wrong"]').checked = true;
+    summaryCount.textContent = "";
+    summaryLevel.textContent = "";
+    summaryReview.textContent = "";
+    showStep(0);
 });
