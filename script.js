@@ -44,6 +44,7 @@ subscribeForm.addEventListener("submit", handleSubscirbe);
 const themeButton = document.querySelector("#themeButton");
 const nicknameInput = document.querySelector("#nickname");
 const nicknameCount = document.querySelector("#nicknameCount");
+const agreeCheck = document.querySelector("#agreeCheck");
 const agreeMessage = document.querySelector("#agreeMessage");
 const startButton = document.querySelector("#startButton");
 
@@ -96,7 +97,7 @@ function resetTabsAndPanels() {
 }
 
 function activateTab(clickedTab) {
-    const targetSelector = clickedTab.dataset.target;
+    const targetSelector = "#" + clickedTab.dataset.target;
     const targetPanel = document.querySelector(targetSelector);
 
     clickedTab.classList.add("is-active");

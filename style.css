@@ -215,7 +215,9 @@ button:active {
 
 .agree-row input{
     flex: 0 0 auto;
+    width: auto;
     margin-top: 6px;
+    padding: 0;
 }
 
 #startButton:disabled{
