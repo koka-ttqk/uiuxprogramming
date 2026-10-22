@@ -211,11 +211,11 @@
         <input id="level-range" type="range" min="0" max="2" step="1" value="1">
         <output id="level-value" for="level-range">중급</output>
 
-        <label><input type="checkbox" id="review-option">오답 복습 포함</label>
-        <fieldset id="review-options" hidden>
-          <legend>복습 방식</legend>
-          <label><input type="radio" name="review-type" value="wrong" checked>틀린 단어만 다시 풀기</label>
-          <label><input type="radio" name="review-type" value="all">전체 단어 다시 풀기</label>
+        <label><input type="checkbox" id="example-option">예문 학습 포함</label>
+        <fieldset id="example-options" hidden>
+          <legend>예문 학습 방식</legend>
+          <label><input type="radio" name="example-type" value="together" checked>뜻과 예문 함께 보기</label>
+          <label><input type="radio" name="example-type" value="after">뜻 확인 후 예문 보기</label>
         </fieldset>
         <div class="step-actions">
           <button id="option-prev" type="button">이전</button>
@@ -228,7 +228,7 @@
         <div class="summary-list">
           <div><span>단어 개수</span><strong id="summary-count"></strong></div>
           <div><span>단어 난이도</span><strong id="summary-level"></strong></div>
-          <div><span>오답 복습</span><strong id="summary-review"></strong></div>
+          <div><span>예문 학습</span><strong id="summary-example"></strong></div>
         </div>
         <div class="step-actions">
           <button id="summary-prev" type="button">수정하기</button>

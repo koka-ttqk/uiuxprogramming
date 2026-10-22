@@ -124,8 +124,8 @@ const countError = document.querySelector("#count-error");
 const countNext = document.querySelector("#count-next");
 const levelRange = document.querySelector("#level-range");
 const levelValue = document.querySelector("#level-value");
-const reviewOption = document.querySelector("#review-option");
-const reviewOptions = document.querySelector("#review-options");
+const exampleOption = document.querySelector("#example-option");
+const exampleOptions = document.querySelector("#example-options");
 const optionPrev = document.querySelector("#option-prev");
 const optionNext = document.querySelector("#option-next");
 const summaryPrev = document.querySelector("#summary-prev");
@@ -133,11 +133,11 @@ const finishButton = document.querySelector("#finish-button");
 const restartButton = document.querySelector("#restart-button");
 const summaryCount = document.querySelector("#summary-count");
 const summaryLevel = document.querySelector("#summary-level");
-const summaryReview = document.querySelector("#summary-review");
+const summaryExample = document.querySelector("#summary-example");
 const levelValues = ["초급", "중급", "고급"];
 
 const formData = {
-    count: "", level: "중급", review: false, reviewType: "wrong"
+    count: "", level: "중급", review: false, exampleType: "together"
 };
 
 
@@ -199,20 +199,27 @@ countNext.addEventListener("click", () => {
 levelRange.addEventListener("input", () => {
     levelValue.value = levelValues[levelRange.value];
 });
-reviewOption.addEventListener("change", () => {
-    reviewOptions.hidden = !reviewOption.checked;
+exampleOption.addEventListener("change", () => {
+    exampleOptions.hidden = !exampleOption.checked;
 });
 
 optionPrev.addEventListener("click", () => showStep(0));
 optionNext.addEventListener("click", () => {
     formData.level = levelValues[levelRange.value];
-    formData.review = reviewOption.checked;
-    const reviewType = document.querySelector('input[name="review-type"]:checked');
-    formData.reviewType = reviewType.value;
+    formData.example = exampleOption.checked;
+    const exampleType = document.querySelector(
+        'input[name="example-type"]:checked'
+    );
+
+    formData.exampleType = exampleType.value;
+
     summaryCount.textContent = formData.count + "개";
     summaryLevel.textContent = formData.level;
-    summaryReview.textContent = formData.review
-        ? (formData.reviewType === "wrong" ? "틀린 단어만 다시 풀기" : "전체 단어 다시 풀기")
+
+    summaryExample.textContent = formData.example
+        ? (formData.exampleType === "together"
+            ? "뜻과 예문 함께 보기"
+            : "뜻 확인 후 예문 보기")
         : "미포함";
     showStep(2);
 });
@@ -222,18 +229,25 @@ finishButton.addEventListener("click", () => showStep(3));
 restartButton.addEventListener("click", () => {
     formData.count = "";
     formData.level = "중급";
-    formData.review = false;
-    formData.reviewType = "wrong";
+    formData.example = false;
+    formData.exampleType = "together";
+
     countInput.value = "";
     countError.textContent = "";
     countInput.classList.remove("has-error");
     levelRange.value = "1";
     levelValue.value = "중급";
-    reviewOption.checked = false;
-    reviewOptions.hidden = true;
-    document.querySelector('input[name="review-type"][value="wrong"]').checked = true;
+
+    exampleOption.checked = false;
+    exampleOptions.hidden = true;
+
+    document.querySelector(
+        'input[name="example-type"][value="together"]'
+    ).checked = true;
+
     summaryCount.textContent = "";
     summaryLevel.textContent = "";
-    summaryReview.textContent = "";
+    summaryExample.textContent = "";
+
     showStep(0);
 });
