@@ -358,6 +358,53 @@ body.dark .subscribe-card{
     display: none;
 }
 
+/* 오늘의 단어 학습 이동 버튼 */
+.learning-link {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background-color: #F2A93B;
+    color: #292a31;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.learning-link:hover {
+    background-color: #E39A2E;
+}
+
+.learning-link:focus-visible {
+    outline: 3px solid #59627F;
+    outline-offset: 2px;
+}
+
+.learning-link:active {
+    transform: translateY(1px);
+}
+
+/* 서비스 준비 중 안내 */
+.coming-soon {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background-color: #F2EBD9;
+    color: #756448;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+body.dark .learning-link {
+    color: #292a31;
+}
+
+body.dark .coming-soon {
+    background-color: #454A5B;
+    color: #F2D8A5;
+}
+
 body.dark .tab{
     color: #e3d6bd;
     background-color: #343846;
@@ -514,4 +561,10 @@ body.dark .learning-flow{
     .learning-flow .step-actions button {width: 100%;}
     .learning-flow input[type="checkbox"],
     .learning-flow input[type="radio"] {width: auto;}
+    
+    .learning-link {
+        display: block;
+        text-align: center;
+    }
+
 }
