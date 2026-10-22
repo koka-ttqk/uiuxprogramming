@@ -23,7 +23,7 @@ footer {
 img {
     display: block;
     width: 100%;
-    max-width: 720px;
+    max-width: 600px;
     height: auto;
     margin: 20px auto;
     border-radius: 16px;
@@ -32,6 +32,72 @@ img {
 header {
     padding-top: 48px;
     padding-bottom: 32px;
+}
+
+/* 헤더 소개 문구 */
+.header-slogan {
+    display: block;
+    color: #282F48;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+body.dark .header-slogan {
+    color: #F2A93B;
+}
+
+.header-description {
+    max-width: 800px;
+    line-height: 1.8;
+}
+
+/* 이용 방법 */
+.steps-list {
+    display: grid;
+    gap: 16px;
+    padding-left: 0;
+    list-style: none;
+    counter-reset: step;
+}
+
+.steps-list li {
+    position: relative;
+    padding: 20px 24px 20px 72px;
+    border: 1px solid #F5E4B5;
+    border-radius: 12px;
+    background-color: #FFF9E8;
+    counter-increment: step;
+}
+
+.steps-list li::before {
+    content: counter(step);
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #F2A93B;
+    color: #292a31;
+    font-weight: 700;
+}
+
+.steps-list strong {
+    display: block;
+    font-size: 20px;
+}
+
+.steps-list p {
+    margin: 8px 0 0;
+}
+
+body.dark .steps-list li {
+    background-color: #343846;
+    border-color: #454a5b;
 }
 
 section {
@@ -381,6 +447,10 @@ body.dark .learning-flow{
     header{
         padding-top: 32px;
         padding-bottom: 24px;
+    }
+
+    .header-slogan {
+        font-size: 22px;
     }
 
     section{
