@@ -225,7 +225,17 @@ optionNext.addEventListener("click", () => {
 });
 
 summaryPrev.addEventListener("click", () => showStep(1));
-finishButton.addEventListener("click", () => showStep(3));
+finishButton.addEventListener("click", () => {
+    isStudyConfigured = true;
+
+    showStep(3);
+
+    studyReadyMessage.textContent =
+        `학습 설정이 완료되었습니다. ${formData.level} 난이도의 영어 단어 ${formData.count}개를 학습할 수 있습니다.`;
+
+    studyReadyButton.textContent = "오늘의 단어 학습 시작하기";
+});
+
 restartButton.addEventListener("click", () => {
     formData.count = "";
     formData.level = "중급";
@@ -250,4 +260,270 @@ restartButton.addEventListener("click", () => {
     summaryExample.textContent = "";
 
     showStep(0);
+});
+
+const wordLearning = document.querySelector("#word-learning");
+const studyComplete = document.querySelector("#study-complete");
+
+const studyWord = document.querySelector("#study-word");
+const studyMeaning = document.querySelector("#study-meaning");
+const studyExample = document.querySelector("#study-example");
+const studyTranslation = document.querySelector("#study-translation");
+
+const showMeaning = document.querySelector("#show-meaning");
+const showExample = document.querySelector("#show-example");
+const exampleArea = document.querySelector("#study-example-area");
+const exampleContent = document.querySelector("#study-example-content");
+
+const studyPrev = document.querySelector("#study-prev");
+const studyNext = document.querySelector("#study-next");
+
+const studyProgressText = document.querySelector("#study-progress-text");
+const studyProgressBar = document.querySelector("#study-progress-bar");
+const studySettings = document.querySelector("#study-settings");
+
+const studySettingsDialog = document.querySelector("#study-settings-dialog");
+
+const studyReady = document.querySelector("#study-ready");
+const studyReadyMessage = document.querySelector("#study-ready-message");
+const studyReadyButton = document.querySelector("#study-ready-button");
+const studyContent = document.querySelector("#study-content");
+
+let isStudyConfigured = false;
+
+let selectedWords = [];
+let currentWordIndex = 0;
+let revealedWords = [];
+
+studyReadyButton.addEventListener("click", () => {
+    if (!isStudyConfigured) {
+        document.querySelector("#event-practice")
+            .scrollIntoView({ behavior: "smooth" });
+
+        agreeCheck.focus();
+    } else {
+        startStudy();
+    }
+});
+
+// 난이도에 맞는 단어를 무작위로 선택
+function selectRandomWords() {
+    const levelKeys = {
+        "초급": "beginner",
+        "중급": "intermediate",
+        "고급": "advanced"
+    };
+
+    const level = levelKeys[formData.level];
+    const words = [...wordData[level]];
+
+    for (let i = words.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [words[i], words[j]] = [words[j], words[i]];
+    }
+
+    return words.slice(0, formData.count);
+}
+
+// 학습 화면 표시
+function renderWord() {
+    const currentWord = selectedWords[currentWordIndex];
+
+    studyWord.textContent = currentWord.word;
+    studyMeaning.textContent = currentWord.meaning;
+    studyExample.textContent = currentWord.example;
+    studyTranslation.textContent = currentWord.translation;
+
+    const revealed = revealedWords[currentWordIndex];
+
+    studyMeaning.hidden = !revealed;
+    showMeaning.hidden = revealed;
+
+    exampleArea.hidden = !formData.example || !revealed;
+
+    const showTogether = formData.exampleType === "together";
+
+    exampleContent.hidden = !revealed || !showTogether;
+    showExample.hidden = !revealed || showTogether;
+
+    studyProgressText.textContent =
+        `${currentWordIndex + 1} / ${selectedWords.length}`;
+
+    studyProgressBar.max = selectedWords.length;
+    studyProgressBar.value = currentWordIndex + 1;
+
+    studyPrev.disabled = currentWordIndex === 0;
+
+    studyNext.textContent =
+        currentWordIndex === selectedWords.length - 1
+            ? "학습 완료하기"
+            : "다음 단어";
+}
+
+// 학습 시작
+function startStudy(useNewWords = true) {
+    if (useNewWords) {
+        selectedWords = selectRandomWords();
+    }
+
+    currentWordIndex = 0;
+    revealedWords = Array(selectedWords.length).fill(false);
+
+    learningFlow.hidden = true;
+    studyComplete.hidden = true;
+
+    studyReady.hidden = true;
+    studyContent.hidden = false;
+
+    studySettings.textContent =
+        `${formData.level} · ${selectedWords.length}개 · 예문 학습 ${
+            formData.example ? "포함" : "미포함"
+        }`;
+
+    renderWord();
+
+    wordLearning.scrollIntoView({ behavior: "smooth" });
+}
+
+// 뜻 확인
+showMeaning.addEventListener("click", () => {
+    revealedWords[currentWordIndex] = true;
+    renderWord();
+});
+
+// 예문 확인
+showExample.addEventListener("click", () => {
+    exampleContent.hidden = false;
+    showExample.hidden = true;
+});
+
+// 이전 단어
+studyPrev.addEventListener("click", () => {
+    if (currentWordIndex > 0) {
+        currentWordIndex--;
+        renderWord();
+    }
+});
+
+// 다음 단어
+studyNext.addEventListener("click", () => {
+    if (currentWordIndex < selectedWords.length - 1) {
+        currentWordIndex++;
+        renderWord();
+    } else {
+        checkUnfinishedWords();
+    }
+});
+
+// 설정 완료 후 학습 시작
+document.querySelector("#begin-study").addEventListener("click", () => {
+    startStudy();
+});
+
+// 같은 단어 다시 학습
+document.querySelector("#study-repeat").addEventListener("click", () => {
+    startStudy(false);
+});
+
+// 새로운 단어 학습
+document.querySelector("#study-new").addEventListener("click", () => {
+    startStudy(true);
+});
+
+// 학습 설정 초기화 화면으로 이동
+function returnToSettings() {
+    isStudyConfigured = false;
+
+    studyContent.hidden = true;
+    studyReady.hidden = false;
+    studyComplete.hidden = true;
+
+    studyReadyMessage.textContent =
+        "학습을 시작하려면 먼저 학습 조건을 설정해 주세요.";
+
+    studyReadyButton.textContent = "학습 설정하기";
+
+    learningFlow.hidden = false;
+
+    restartButton.click();
+
+    learningFlow.scrollIntoView({ behavior: "smooth" });
+}
+
+document.querySelector("#study-reset").addEventListener("click", returnToSettings);
+
+// 현재 설정 확인
+document.querySelector("#study-settings-button").addEventListener("click", () => {
+    document.querySelector("#study-settings-summary").textContent =
+        `단어 ${formData.count}개 / 난이도 ${formData.level} / 예문 학습 ${
+            formData.example
+                ? (formData.exampleType === "together"
+                    ? "뜻과 예문 함께 보기"
+                    : "뜻 확인 후 예문 보기")
+                : "미포함"
+        }`;
+
+    studySettingsDialog.showModal();
+});
+
+// 설정 변경 취소: 기존 학습 유지
+document.querySelector("#study-settings-cancel").addEventListener("click", () => {
+    studySettingsDialog.close();
+});
+
+// 설정 변경: 기존 학습 종료 후 재설정
+document.querySelector("#study-settings-change").addEventListener("click", () => {
+    studySettingsDialog.close();
+    returnToSettings();
+});
+
+const unfinishedDialog = document.querySelector("#unfinished-dialog");
+const unfinishedMessage = document.querySelector("#unfinished-message");
+
+const reviewUnfinished = document.querySelector("#review-unfinished");
+const finishAnyway = document.querySelector("#finish-anyway");
+
+function completeStudy() {
+    studyContent.hidden = true;
+    studyComplete.hidden = false;
+
+    document.querySelector("#study-complete-message").textContent =
+        `${selectedWords.length}개의 영어 단어 학습을 완료했습니다.`;
+
+    studyComplete.scrollIntoView({ behavior: "smooth" });
+}
+
+function checkUnfinishedWords() {
+    const unfinishedCount = revealedWords.filter(
+        revealed => !revealed
+    ).length;
+
+    if (unfinishedCount > 0) {
+        unfinishedMessage.textContent =
+            `총 ${selectedWords.length}개 중 ${unfinishedCount}개의 단어를 아직 확인하지 않았습니다.`;
+
+        unfinishedDialog.showModal();
+    } else {
+        completeStudy();
+    }
+}
+
+reviewUnfinished.addEventListener("click", () => {
+    unfinishedDialog.close();
+
+    const firstUnfinishedIndex = revealedWords.findIndex(
+        revealed => !revealed
+    );
+
+    if (firstUnfinishedIndex !== -1) {
+        currentWordIndex = firstUnfinishedIndex;
+        renderWord();
+
+        wordLearning.scrollIntoView({ behavior: "smooth" });
+    }
+});
+
+finishAnyway.addEventListener("click", () => {
+    unfinishedDialog.close();
+    completeStudy();
 });

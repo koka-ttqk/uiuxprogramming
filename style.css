@@ -485,6 +485,184 @@ body.dark .learning-flow{
     border-color: #2d2e38;
 }
 
+
+/* 학습 화면 */
+.word-learning,
+.study-complete {
+    padding: 24px;
+    border: 1px solid #F5E4B5;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+}
+
+.word-learning[hidden],
+.study-complete[hidden],
+.word-card [hidden] {
+    display: none;
+}
+
+.study-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.study-progress {
+    margin: 24px 0;
+}
+
+#study-progress-text {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+#study-progress-bar {
+    width: 100%;
+    height: 12px;
+    accent-color: #F2A93B;
+}
+
+.word-card {
+    padding: 40px 24px;
+    border: 1px solid #F5E4B5;
+    border-radius: 16px;
+    background-color: #FFF9E8;
+    text-align: center;
+}
+
+/* 학습 화면 내부 상태 전환 */
+#study-ready[hidden],
+#study-content[hidden] {
+    display: none;
+}
+
+#study-ready {
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px solid #F5E4B5;
+    border-radius: 12px;
+    background-color: #FFF9E8;
+}
+
+#study-ready h3 {
+    margin-top: 0;
+}
+
+#study-ready-button {
+    margin-top: 16px;
+}
+
+body.dark #study-ready {
+    background-color: #343846;
+    border-color: #454A5B;
+}
+
+#study-word {
+    font-size: 36px;
+    margin: 0 0 24px;
+}
+
+/* 이전 단어 버튼 비활성화 */
+#study-prev:disabled {
+    background-color: #A8A8B2;
+    color: #FFFFFF;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+}
+
+#study-meaning {
+    font-size: 24px;
+    font-weight: 700;
+    color: #292A31;
+}
+
+#study-example-area {
+    margin-top: 24px;
+}
+
+#study-example {
+    font-size: 18px;
+    font-weight: 600;
+    color: #292A31;
+}
+
+#study-translation {
+    font-size: 16px;
+}
+
+.study-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.study-actions button {
+    flex: 1;
+}
+
+#study-settings-dialog {
+    width: min(520px, calc(100% - 32px));
+    padding: 24px;
+    border: 1px solid #DEDDEA;
+    border-radius: 12px;
+}
+
+#study-settings-dialog::backdrop {
+    background: rgba(30, 20, 39, 0.6);
+}
+
+/* 미확인 단어 안내창 */
+#unfinished-dialog {
+    width: min(520px, calc(100% - 32px));
+    padding: 24px;
+    border: 1px solid #F5E4B5;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    color: #292A31;
+}
+
+#unfinished-dialog::backdrop {
+    background: rgba(30, 20, 39, 0.6);
+}
+
+#unfinished-dialog .dialog-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+#unfinished-dialog .dialog-actions button {
+    flex: 1;
+}
+
+body.dark #unfinished-dialog {
+    background-color: #50515F;
+    border-color: #454A5B;
+    color: #FFFFFF;
+}
+
+body.dark .word-learning,
+body.dark .study-complete,
+body.dark .word-card {
+    background-color: #343846;
+    border-color: #454A5B;
+}
+
+body.dark #study-meaning,
+body.dark #study-example {
+    color: #F4F1EA;
+}
+
+body.dark #study-settings-dialog {
+    background-color: #50515F;
+    color: #FFFFFF;
+}
+
 /* 웹페이지가 표시되는 가로 폭이 768px 이하일 때만 적용 */
 @media (max-width: 768px){
     body{
@@ -565,6 +743,30 @@ body.dark .learning-flow{
     .learning-link {
         display: block;
         text-align: center;
+    }
+
+    .word-card {
+        padding: 28px 16px;
+    }
+
+    #study-word {
+        font-size: 30px;
+    }
+
+    .study-actions {
+        flex-direction: column;
+    }
+
+    .study-actions button {
+        width: 100%;
+    }
+
+    #unfinished-dialog .dialog-actions {
+        flex-direction: column;
+    }
+
+    #unfinished-dialog .dialog-actions button {
+        width: 100%;
     }
 
 }
