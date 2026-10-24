@@ -162,6 +162,7 @@ function revokeLearningReady() {
 startButton.addEventListener("click", () => {
     if (!agreeCheck.checked) return;
     learningDialog.showModal();
+    learningConfirm.focus();
 });
 learningCancel.addEventListener("click", () => {
     learningDialog.close();
