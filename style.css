@@ -336,49 +336,6 @@ button:active {
     cursor: not-allowed;
 }
 
-.event-grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 24px;
-}
-
-.event-card{
-    min-width: 0;
-    padding: 24px;
-    border: 1px solid #deddea;
-    border-radius: 12px;
-    background-color: #ffffff;
-}
-
-.event-card label:not(.agree-row){
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 700;
-}
-
-.event-card input[type="text"]{
-    width: 100%;
-}
-
-.agree-row{
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-}
-
-.agree-row input{
-    flex: 0 0 auto;
-    width: auto;
-    margin-top: 6px;
-    padding: 0;
-}
-
-#startButton:disabled{
-    color: #ffffff;
-    background-color: #a8a8b2;
-    cursor: not-allowed;
-}
-
 body.dark{
     color: #f4f1ea;
     background-color: #20232e;
@@ -390,22 +347,9 @@ body.dark nav a{
 }
 
 body.dark .feature-card,
-body.dark .event-card,
 body.dark .subscribe-card{
     background-color: #343846;
     border-color: #454a5b;
-}
-
-#agreeMessage{
-    padding: 12px;
-    border-radius: 10px;
-    background-color: #ecebf2;
-}
-
-#agreeMessage.is-ready{
-    color: #245c3a;
-    background-color: #e7f7ed;
-    font-weight: 700;
 }
 
 .tabs{
@@ -508,46 +452,188 @@ body.dark .panel{
     border-color: #454a5b;
 }
 
-#learning-dialog{
-    width: min(520px, calc(100% - 32px));
-    max-width: none;
+/* 영어 단어 학습 설정 */
+.learning-flow {
     padding: 24px;
-    border: 1px solid #deddea;
-    border-radius: 12px;
-    background: #fff;
-    color: #27232c;
+    border: 1px solid #F5E4B5;
+    border-radius: 16px;
+    background-color: #FFFFFF;
 }
-#learning-dialog::backdrop {background: rgba(30, 20, 39, .6);}
-#learning-dialog .dialog-actions {display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;}
-#learning-dialog button {min-height: 44px;}
-body.dark #learning-dialog {background: #50515f; color: #fff;}
 
-.learning-flow{
-    padding: 24px;
-    border: 1px solid #deddea;
-    border-radius: 12px;
-    background-color: #ffffff;
+.learning-heading h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
 }
-.learning-flow[hidden],
-.learning-flow .step[hidden],
-.learning-flow fieldset[hidden] {display: none;}
-.learning-flow .progress {display: flex; flex-wrap: wrap; gap: 12px;}
-.learning-flow .progress__item.is-active{
-    color: #F2A93B;
+
+.learning-heading p {
+    margin-top: 0;
+}
+
+/* 단계 진행 표시 */
+.learning-flow .progress {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.learning-flow .progress__item {
+    padding: 14px 12px;
+    border: 1px solid #F5E4B5;
+    border-radius: 10px;
+    background-color: #FFF9E8;
+    color: #756448;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.learning-flow .progress__item.is-active {
+    background-color: #F2A93B;
+    border-color: #F2A93B;
+    color: #292A31;
     font-weight: 800;
 }
 
-.learning-flow #word-count {
-    width: 300px;
+/* 폼 */
+#learning-form {
+    display: block;
 }
 
-.learning-flow .error-message{
-    min-height: 24px;
-    color: #9d243d;
+.learning-flow .step {
+    margin-top: 0;
+}
+
+.learning-flow .step[hidden],
+.learning-flow fieldset[hidden] {
+    display: none;
+}
+
+.learning-flow .progress__item {
+    cursor: default;
+}
+
+.learning-flow .step h3 {
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.learning-flow .step h3 + p {
+    margin-top: 0;
+}
+
+/* 입력 영역 */
+.learning-flow .field-group {
+    margin-top: 16px;
+}
+
+.learning-flow .field-group > label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
     font-weight: 700;
 }
-.learning-flow #word-count.has-error {border-color: #9d243d;}
-.learning-flow #level-range {width: 100%; accent-color: #F2A93B;}
+
+.learning-flow input[type="text"],
+.learning-flow input[type="number"] {
+    display: block;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #D9CFAF;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    color: #292A31;
+}
+
+.learning-flow input:focus {
+    border-color: #F2A93B;
+}
+
+.learning-flow .field-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.learning-flow .field-meta p,
+.learning-flow .field-group > p:not(.error-message)  {
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+.learning-flow #title-count {
+    color: #756448;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* 유효성 검사 */
+.learning-flow .error-message {
+    height: 24px;
+    min-height: 24px;
+    margin: 0;
+    padding: 0;
+    color: #B42338;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.learning-flow .error-message:not(:empty) {
+    margin-top: 0;
+}
+
+.learning-flow input.has-error {
+    border-color: #B42338;
+    background-color: #FFF4F4;
+}
+
+
+/* 올바른 입력 메시지 */
+.learning-flow .error-message.is-valid {
+    color: #245C3A;
+}
+
+/* 올바른 입력창 */
+.learning-flow input.is-valid {
+    border-color: #2E8B57;
+    background-color: #F3FBF5;
+}
+
+/* 다크 모드 */
+body.dark .learning-flow .error-message.is-valid {
+    color: #8DE0AA;
+}
+
+body.dark .learning-flow input.is-valid {
+    border-color: #65B884;
+    background-color: #293D33;
+}
+
+/* 난이도 */
+.learning-flow #level-range {
+    width: 100%;
+    accent-color: #F2A93B;
+}
+
+.learning-flow #level-value {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background-color: #FFF3D7;
+    color: #8A590D;
+    font-weight: 700;
+}
+
+/* 예문 학습 */
+.learning-flow .field-group > label.option-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .learning-flow input[type="checkbox"],
 .learning-flow input[type="radio"] {
     flex: 0 0 auto;
@@ -555,33 +641,154 @@ body.dark #learning-dialog {background: #50515f; color: #fff;}
     accent-color: #F2A93B;
 }
 
+.learning-flow #example-options {
+    margin-top: 16px;
+    padding: 20px;
+    border: 1px solid #F5E4B5;
+    border-radius: 12px;
+    background-color: #FFF9E8;
+}
+
+.learning-flow #example-options legend {
+    padding: 0 8px;
+    font-weight: 700;
+}
+
+.learning-flow #example-options label {
+    display: block;
+    margin: 12px 0;
+}
+
+/* 설정 요약 */
+.learning-flow .summary-list {
+    margin-top: 24px;
+    padding: 12px 20px;
+    border: 1px solid #F5E4B5;
+    border-radius: 12px;
+    background-color: #FFF9E8;
+}
+
 .learning-flow .summary-list > div {
     display: flex;
     justify-content: space-between;
     gap: 16px;
-    padding: 12px 0;
-    border-bottom: 1px solid #deddea;
+    padding: 16px 0;
+    border-bottom: 1px solid #F5E4B5;
 }
-.learning-flow .step-actions{
+
+.learning-flow .summary-list > div:last-child {
+    border-bottom: none;
+}
+
+/* 단계 이동 버튼 */
+.learning-flow .step-actions,
+.learning-flow .complete-actions {
     display: flex;
+    justify-content: flex-end;
     gap: 12px;
+    margin-top: 12px;
+}
+
+.learning-flow .step-actions button,
+.learning-flow .complete-actions button {
+    min-height: 46px;
+}
+
+.learning-flow button:disabled {
+    background-color: #A8A8B2;
+    cursor: not-allowed;
+}
+
+#submit-status {
+    font-weight: 700;
+    color: #B42338;
+}
+
+/* 내 학습 설정 */
+.my-learning-settings {
+    margin-top: 56px;
+}
+
+.saved-settings-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.saved-setting-card {
+    padding: 24px;
+    border: 1px solid #F5E4B5;
+    border-radius: 14px;
+    background-color: #FFFFFF;
+}
+
+.saved-setting-card h3 {
+    margin-top: 0;
+}
+
+.saved-setting-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-top: 20px;
 }
 
-/* 학습 설정 완료 화면 버튼 */
-.complete-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
+.saved-setting-actions .delete-setting {
+    background-color: #E8E8EC;
+    color: #555763;
 }
 
-.complete-actions button {
-    flex: 1;
+.saved-setting-actions .delete-setting:hover {
+    background-color: #D8D8DF;
 }
 
-body.dark .learning-flow{
-    background-color: #50515f;
-    border-color: #2d2e38;
+#settings-empty-message {
+    padding: 28px;
+    border: 1px dashed #D9CFAF;
+    border-radius: 12px;
+    text-align: center;
+    background-color: #FFF9E8;
+}
+
+#settings-empty-message[hidden] {
+    display: none;
+}
+
+/* 다크 모드 */
+body.dark .learning-flow,
+body.dark .saved-setting-card {
+    background-color: #343846;
+    border-color: #454A5B;
+}
+
+body.dark .learning-flow .progress__item,
+body.dark .learning-flow .summary-list,
+body.dark .learning-flow #example-options,
+body.dark #settings-empty-message {
+    background-color: #292D39;
+    border-color: #454A5B;
+    color: #F4F1EA;
+}
+
+body.dark .learning-flow .progress__item.is-active {
+    background-color: #F2A93B;
+    color: #292A31;
+}
+
+body.dark .learning-flow input[type="text"],
+body.dark .learning-flow input[type="number"] {
+    background-color: #292D39;
+    color: #F4F1EA;
+    border-color: #555B6D;
+}
+
+body.dark .learning-flow input.has-error {
+    border-color: #FF8995;
+}
+
+body.dark .learning-flow #level-value {
+    background-color: #59482C;
+    color: #FFE0A5;
 }
 
 
@@ -959,42 +1166,56 @@ body.dark #study-settings-dialog {
         text-align: left;
     }
 
-    /* 학습 준비 확인 팝업 */
-    #learning-dialog .dialog-actions {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    #learning-dialog .dialog-actions button {
-        width: 100%;
-    }
-
+    
     /* 영어 단어 학습 설정 */
     .learning-flow {
         padding: 20px;
     }
 
-    .learning-flow .step-actions {
+    /* 단계 진행 표시 */
+    .learning-flow .progress {
+        gap: 6px;
+    }
+
+    .learning-flow .progress__item {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+
+    /* 단계 이동 버튼 */
+    .learning-flow .step-actions,
+    .learning-flow .complete-actions {
         flex-direction: column-reverse;
         gap: 12px;
     }
 
-    .learning-flow .step-actions button {
+    .learning-flow .step-actions button,
+    .learning-flow .complete-actions button {
         width: 100%;
     }
 
+    /* 체크박스와 라디오 버튼 */
     .learning-flow input[type="checkbox"],
     .learning-flow input[type="radio"] {
         width: auto;
     }
 
-    /* 학습 설정 완료 화면 버튼 */
-    .complete-actions {
+    /* 학습 설정 요약 */
+    .learning-flow .summary-list > div {
         flex-direction: column;
-        gap: 12px;
+        gap: 4px;
     }
 
-    .complete-actions button {
+    /* 저장된 학습 설정 */
+    .saved-settings-list {
+        grid-template-columns: 1fr;
+    }
+
+    .saved-setting-actions {
+        flex-direction: column;
+    }
+
+    .saved-setting-actions button {
         width: 100%;
     }
 

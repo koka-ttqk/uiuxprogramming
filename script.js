@@ -42,11 +42,6 @@ function handleSubscirbe(event) {
 subscribeForm.addEventListener("submit", handleSubscirbe);
 
 const themeButton = document.querySelector("#themeButton");
-const nicknameInput = document.querySelector("#nickname");
-const nicknameCount = document.querySelector("#nicknameCount");
-const agreeCheck = document.querySelector("#agreeCheck");
-const agreeMessage = document.querySelector("#agreeMessage");
-const startButton = document.querySelector("#startButton");
 
 function handleThemeClick() {
     const isDark = document.body.classList.toggle("dark");
@@ -98,33 +93,6 @@ window.addEventListener("resize", function () {
     }
 });
 
-
-function handleNicknameInput() {
-    const maxLength = nicknameInput.maxLength;
-    const currentlength = Math.min(nicknameInput.value.length, maxLength);
-
-    nicknameCount.textContent = currentlength + " / " + maxLength;
-}
-
-nicknameInput.addEventListener("input", handleNicknameInput);
-
-function handleAgreeChange() {
-    const agreed = agreeCheck.checked;
-
-    startButton.disabled = !agreed;
-    agreeMessage.textContent = agreed 
-        ? "학습 설정을 시작할 수 있습니다"
-        : "준비 완료를 체크하면 학습 설정을 시작할 수 있습니다.";
-
-    if (agreed) {
-        agreeMessage.classList.add("is-ready");
-    } else {
-        agreeMessage.classList.remove("is-ready");
-    }
-}
-
-agreeCheck.addEventListener("change", handleAgreeChange);
-
 const tabs = document.querySelectorAll(".tab");
 const panels = document.querySelectorAll(".panel");
 
@@ -159,104 +127,189 @@ tabs.forEach(function (tab) {
     tab.addEventListener("click", handleTabClick);
 });
 
+
+/* 영어 단어 학습 설정 */
 const learningFlow = document.querySelector("#learning-flow");
+const learningForm = document.querySelector("#learning-form");
 const flowSteps = learningFlow.querySelectorAll(".step");
 const progressItems = learningFlow.querySelectorAll(".progress__item");
+
+const titleInput = document.querySelector("#learning-title-input");
+const titleCount = document.querySelector("#title-count");
+const titleError = document.querySelector("#title-error");
 const countInput = document.querySelector("#word-count");
 const countError = document.querySelector("#count-error");
 const countNext = document.querySelector("#count-next");
+
 const levelRange = document.querySelector("#level-range");
 const levelValue = document.querySelector("#level-value");
 const exampleOption = document.querySelector("#example-option");
 const exampleOptions = document.querySelector("#example-options");
 const optionPrev = document.querySelector("#option-prev");
 const optionNext = document.querySelector("#option-next");
+
 const summaryPrev = document.querySelector("#summary-prev");
 const finishButton = document.querySelector("#finish-button");
 const restartButton = document.querySelector("#restart-button");
+
+const summaryTitle = document.querySelector("#summary-title");
 const summaryCount = document.querySelector("#summary-count");
 const summaryLevel = document.querySelector("#summary-level");
 const summaryExample = document.querySelector("#summary-example");
+const submitStatus = document.querySelector("#submit-status");
+
+const savedSettingsList = document.querySelector("#saved-settings-list");
+const settingsEmptyMessage = document.querySelector("#settings-empty-message");
+
 const levelValues = ["초급", "중급", "고급"];
+const storageKey = "wordmate-learning-settings";
 
 const formData = {
-    count: "", level: "중급", review: false, exampleType: "together"
+    title: "",
+    count: "",
+    level: "중급",
+    example: false,
+    exampleType: "together"
 };
 
+let savedSettings = [];
+let isSubmitting = false;
 
+/* 단계 표시 */
 function showStep(index) {
-    flowSteps.forEach((step, i) => { step.hidden = i !== index; });
-    progressItems.forEach((item, i) => {
-        item.classList.toggle("is-active", i === index);
+    flowSteps.forEach(function (step, i) {
+        step.hidden = i !== index;
+    });
+
+    progressItems.forEach(function (item, i) {
+        item.classList.toggle("is-active", i === index && i < 3);
     });
 }
 
-const learningDialog = document.querySelector("#learning-dialog");
-const learningCancel = document.querySelector("#learning-cancel");
-const learningConfirm = document.querySelector("#learning-confirm");
 
-function revokeLearningReady() {
-    agreeCheck.checked = false;
-    learningFlow.hidden = true;
-    handleAgreeChange();
-    agreeCheck.focus();
+/* 입력 상태 표시 */
+function showFieldError(input, errorElement, message, isValid = false) {
+    errorElement.textContent = message;
+
+    input.classList.toggle("has-error", message !== "" && !isValid);
+    input.classList.toggle("is-valid", isValid);
+
+    errorElement.classList.toggle("is-valid", isValid);
+
+    input.setAttribute("aria-invalid", String(message !== "" && !isValid));
 }
 
-startButton.addEventListener("click", () => {
-    if (!agreeCheck.checked) return;
-    learningDialog.showModal();
-    learningConfirm.focus();
-});
-learningCancel.addEventListener("click", () => {
-    learningDialog.close();
-    revokeLearningReady();
-});
-learningDialog.addEventListener("cancel", revokeLearningReady);
-learningConfirm.addEventListener("click", () => {
-    if (!agreeCheck.checked) return;
-    learningDialog.close();
-    learningFlow.hidden = false;
-    showStep(0);
-    learningFlow.scrollIntoView({ behavior: "smooth" });
-    countInput.focus();
-});
+/* 학습 설정 이름 검증 */
+function validateTitle() {
+    const value = titleInput.value.trim();
 
-function validateCount() {
-    const value = countInput.value.trim();
-    if (!value || !Number.isInteger(Number(value)) || Number(value) < 1 || Number(value) > 20) {
-        countError.textContent = "1~20 사이의 정수를 입력해 주세요.";
-        countInput.classList.add("has-error");
-        countInput.focus();
+    if (value.length < 2 || value.length > 30) {
+        showFieldError(
+            titleInput,
+            titleError,
+            "학습 설정 이름을 2~30자로 입력해 주세요."
+        );
         return false;
     }
-    countError.textContent = "";
-    countInput.classList.remove("has-error");
-    formData.count = Number(value);
+
+    showFieldError(
+        titleInput,
+        titleError,
+        "학습 설정 이름이 올바르게 입력되었습니다.",
+        true
+    );
+
+    formData.title = value;
     return true;
 }
 
-countNext.addEventListener("click", () => {
-    if (!validateCount()) return;
+/* 단어 개수 검증 */
+function validateCount() {
+    const value = countInput.value.trim();
+    const count = Number(value);
+
+    if (
+        value === "" ||
+        !Number.isInteger(count) ||
+        count < 1 ||
+        count > 20
+    ) {
+        showFieldError(
+            countInput,
+            countError,
+            "단어 개수는 1~20 사이의 정수로 입력해 주세요."
+        );
+        return false;
+    }
+
+    showFieldError(
+        countInput,
+        countError,
+        "학습할 단어 개수가 올바르게 입력되었습니다.",
+        true
+    );
+
+    formData.count = count;
+    return true;
+}
+
+/* 실시간 입력 확인 */
+titleInput.addEventListener("input", function () {
+    titleCount.textContent = titleInput.value.length + " / 30자";
+    validateTitle();
+});
+
+countInput.addEventListener("input", function () {
+    validateCount();
+});
+
+/* 1단계 → 2단계 */
+countNext.addEventListener("click", function () {
+    const titleValid = validateTitle();
+    const countValid = validateCount();
+
+    if (!titleValid || !countValid) {
+        if (!titleValid) {
+            titleInput.focus();
+        } else {
+            countInput.focus();
+        }
+        return;
+    }
+
     showStep(1);
 });
 
-levelRange.addEventListener("input", () => {
-    levelValue.value = levelValues[levelRange.value];
-});
-exampleOption.addEventListener("change", () => {
-    exampleOptions.hidden = !exampleOption.checked;
+/* 난이도 변경 */
+levelRange.addEventListener("input", function () {
+    levelValue.value = levelValues[Number(levelRange.value)];
 });
 
-optionPrev.addEventListener("click", () => showStep(0));
-optionNext.addEventListener("click", () => {
-    formData.level = levelValues[levelRange.value];
+/* 예문 학습 조건부 입력 */
+exampleOption.addEventListener("change", function () {
+    const checked = exampleOption.checked;
+
+    exampleOptions.hidden = !checked;
+    exampleOptions.disabled = !checked;
+    exampleOption.setAttribute("aria-expanded", String(checked));
+});
+
+/* 2단계 이동 */
+optionPrev.addEventListener("click", function () {
+    showStep(0);
+});
+
+optionNext.addEventListener("click", function () {
+    formData.level = levelValues[Number(levelRange.value)];
     formData.example = exampleOption.checked;
-    const exampleType = document.querySelector(
+
+    const selectedExample = document.querySelector(
         'input[name="example-type"]:checked'
     );
 
-    formData.exampleType = exampleType.value;
+    formData.exampleType = selectedExample.value;
 
+    summaryTitle.textContent = formData.title;
     summaryCount.textContent = formData.count + "개";
     summaryLevel.textContent = formData.level;
 
@@ -265,46 +318,173 @@ optionNext.addEventListener("click", () => {
             ? "뜻과 예문 함께 보기"
             : "뜻 확인 후 예문 보기")
         : "미포함";
+
     showStep(2);
 });
 
-summaryPrev.addEventListener("click", () => showStep(1));
-finishButton.addEventListener("click", () => {
-    isStudyConfigured = true;
-
-    showStep(3);
-
-    studyReadyMessage.textContent =
-        `학습 설정이 완료되었습니다. ${formData.level} 난이도의 영어 단어 ${formData.count}개를 학습할 수 있습니다.`;
-
-    studyReadyButton.textContent = "오늘의 단어 학습 시작하기";
+/* 3단계 → 2단계 */
+summaryPrev.addEventListener("click", function () {
+    showStep(1);
 });
 
-restartButton.addEventListener("click", () => {
+/* 저장한 학습 설정 불러오기 */
+function loadSavedSettings() {
+    try {
+        const data = JSON.parse(localStorage.getItem(storageKey) || "[]");
+        savedSettings = Array.isArray(data) ? data : [];
+    } catch (error) {
+        savedSettings = [];
+    }
+
+    renderSavedSettings();
+}
+
+/* 저장한 학습 설정 카드 표시 */
+function renderSavedSettings() {
+    savedSettingsList.replaceChildren();
+
+    settingsEmptyMessage.hidden = savedSettings.length > 0;
+
+    savedSettings.forEach(function (setting) {
+        const card = document.createElement("article");
+        card.className = "saved-setting-card";
+
+        const title = document.createElement("h3");
+        title.textContent = setting.title;
+
+        const description = document.createElement("p");
+        description.textContent =
+            setting.level + " · " + setting.count +
+            "개 · 예문 학습 " +
+            (setting.example ? "포함" : "미포함");
+
+        const actions = document.createElement("div");
+        actions.className = "saved-setting-actions";
+
+        const startButton = document.createElement("button");
+        startButton.type = "button";
+        startButton.textContent = "이 설정으로 학습하기";
+
+        startButton.addEventListener("click", function () {
+            formData.title = setting.title;
+            formData.count = setting.count;
+            formData.level = setting.level;
+            formData.example = setting.example;
+            formData.exampleType = setting.exampleType;
+
+            isStudyConfigured = true;
+            startStudy();
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.textContent = "삭제";
+        deleteButton.className = "delete-setting";
+
+        deleteButton.addEventListener("click", function () {
+            const updated = savedSettings.filter(function (item) {
+                return item.id !== setting.id;
+            });
+
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(updated));
+                savedSettings = updated;
+                renderSavedSettings();
+            } catch (error) {
+                alert("설정을 삭제하지 못했습니다.");
+            }
+        });
+
+        actions.append(startButton, deleteButton);
+        card.append(title, description, actions);
+        savedSettingsList.appendChild(card);
+    });
+}
+
+/* 폼 제출 및 저장 */
+learningForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (isSubmitting) return;
+
+    const titleValid = validateTitle();
+    const countValid = validateCount();
+
+    if (!titleValid || !countValid) {
+        showStep(0);
+        return;
+    }
+
+    isSubmitting = true;
+    finishButton.disabled = true;
+    finishButton.textContent = "저장 중...";
+    submitStatus.textContent = "학습 설정을 저장하고 있습니다.";
+
+    const newSetting = {
+        id: Date.now().toString(),
+        title: formData.title,
+        count: formData.count,
+        level: formData.level,
+        example: formData.example,
+        exampleType: formData.exampleType
+    };
+
+    try {
+        const updated = [...savedSettings, newSetting];
+
+        localStorage.setItem(storageKey, JSON.stringify(updated));
+
+        savedSettings = updated;
+        isStudyConfigured = true;
+
+        renderSavedSettings();
+        showStep(3);
+
+        studyReadyMessage.textContent =
+            formData.level + " 난이도의 영어 단어 " +
+            formData.count + "개를 학습할 수 있습니다.";
+
+        studyReadyButton.textContent = "오늘의 단어 학습 시작하기";
+        submitStatus.textContent = "";
+
+    } catch (error) {
+        submitStatus.textContent =
+            "저장에 실패했습니다. 브라우저 저장 공간을 확인해 주세요.";
+    } finally {
+        isSubmitting = false;
+        finishButton.disabled = false;
+        finishButton.textContent = "학습 설정 저장하기";
+    }
+});
+
+/* 새로운 학습 설정 만들기 */
+restartButton.addEventListener("click", function () {
+    learningForm.reset();
+
+    formData.title = "";
     formData.count = "";
     formData.level = "중급";
     formData.example = false;
     formData.exampleType = "together";
 
-    countInput.value = "";
-    countError.textContent = "";
-    countInput.classList.remove("has-error");
-    levelRange.value = "1";
+    titleCount.textContent = "0 / 30자";
+    showFieldError(titleInput, titleError, "");
+    showFieldError(countInput, countError, "");
+
     levelValue.value = "중급";
-
-    exampleOption.checked = false;
     exampleOptions.hidden = true;
+    exampleOptions.disabled = true;
+    exampleOption.setAttribute("aria-expanded", "false");
 
-    document.querySelector(
-        'input[name="example-type"][value="together"]'
-    ).checked = true;
-
-    summaryCount.textContent = "";
-    summaryLevel.textContent = "";
-    summaryExample.textContent = "";
-
+    submitStatus.textContent = "";
     showStep(0);
+    titleInput.focus();
 });
+
+/* 페이지를 열면 저장된 설정 표시 */
+loadSavedSettings();
+showStep(0);
+
 
 const wordLearning = document.querySelector("#word-learning");
 const studyComplete = document.querySelector("#study-complete");
@@ -339,12 +519,11 @@ let selectedWords = [];
 let currentWordIndex = 0;
 let revealedWords = [];
 
-studyReadyButton.addEventListener("click", () => {
+studyReadyButton.addEventListener("click", function () {
     if (!isStudyConfigured) {
-        document.querySelector("#event-practice")
-            .scrollIntoView({ behavior: "smooth" });
-
-        agreeCheck.focus();
+        learningFlow.scrollIntoView({ behavior: "smooth" });
+        showStep(0);
+        titleInput.focus();
     } else {
         startStudy();
     }
@@ -413,7 +592,6 @@ function startStudy(useNewWords = true) {
     currentWordIndex = 0;
     revealedWords = Array(selectedWords.length).fill(false);
 
-    learningFlow.hidden = true;
     studyComplete.hidden = true;
 
     studyReady.hidden = true;
@@ -486,8 +664,6 @@ function returnToSettings() {
         "학습을 시작하려면 먼저 학습 조건을 설정해 주세요.";
 
     studyReadyButton.textContent = "학습 설정하기";
-
-    learningFlow.hidden = false;
 
     restartButton.click();
 

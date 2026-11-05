@@ -168,92 +168,181 @@
       </ol>
     </section>
 
-    <section id="event-practice">
-      <h2>영어 학습 체험하기</h2>
+    <!-- 영어 단어 학습 설정 -->
+    <section id="learning-flow" class="learning-flow">
 
-      <div class="event-grid">
-        <article class="event-card">
-          <h3>학습 닉네임</h3>
-          <label for="nickname">닉네임</label>
-          <input type="text" id="nickname" maxlength="10">
-          <p id="nicknameCount" aria-live="polite">0 / 10</p>
-        </article>
-
-        <article class="event-card">
-          <h3>영어 단어 학습 설정</h3>
-          <label class="agree-row">
-            <input type="checkbox" id="agreeCheck">
-            영어 단어 학습을 시작할 준비가 되었습니다.
-          </label>
-          <p id="agreeMessage" aria-live="polite">
-            준비 완료를 체크하면 학습 설정을 시작할 수 있습니다.
-          </p>
-          <button id="startButton" type="button" disabled>
-            학습 설정 시작하기
-          </button>
-        </article>
+      <div class="learning-heading">
+        <h2>영어 단어 학습 설정하기</h2>
+        <p>나에게 맞는 학습 조건을 설정하고 저장해 보세요.</p>
       </div>
-    </section>
 
-    <dialog id="learning-dialog" aria-labelledby="learning-title" aria-describedby="learning-description">
-      <h2 id="learning-title">학습 준비 확인</h2>
-      <p id="learning-description">영어 단어 학습을 시작할 준비가 되셨나요? 지금은 학습 조건만 설정하며, 실제 학습은 시작되지 않습니다.</p>
-      <div class="dialog-actions">
-        <button id="learning-confirm" type="button">준비 완료! 설정 시작하기</button>
-        <button id="learning-cancel" type="button">돌아가기</button>
+      <!-- 단계 표시 -->
+      <div class="progress" aria-label="학습 설정 진행 단계">
+          <span class="progress__item is-active">STEP 01. 학습 정보</span>
+          <span class="progress__item">STEP 02. 학습 조건</span>
+          <span class="progress__item">STEP 03. 내용 확인</span>
       </div>
-    </dialog>
 
-    <section id="learning-flow" class="learning-flow" hidden>
-      <h2>영어 단어 학습 설정</h2>
-      <p class="progress" aria-label="설정 진행 단계">
-        <span class="progress__item">1 · 단어 개수</span>
-        <span class="progress__item">2 · 조건</span>
-        <span class="progress__item">3 · 확인</span>
-      </p>
+      <form id="learning-form" novalidate>
 
-      <section class="step" data-step="1" hidden>
-        <h3>학습할 단어 개수를 입력해 주세요.</h3>
-        <label for="word-count">단어 개수</label>
-        <input id="word-count" type="number" min="1" max="20" step="1" placeholder="1~20 사이의 정수 입력" aria-describedby="count-error">
-        <p id="count-error" class="error-message" aria-live="polite"></p>
-        <button id="count-next" type="button">학습 조건 선택하기</button>
-      </section>
+        <!-- STEP 1 -->
+        <section class="step" data-step="1">
+          <h3>어떤 단어 학습을 준비할까요?</h3>
+          <p>학습 설정 이름과 학습할 단어 개수를 입력해 주세요.</p>
 
-      <section class="step" data-step="2" hidden>
-        <h3>학습 조건을 선택해 주세요.</h3>
-        <label for="level-range">단어 난이도</label>
-        <input id="level-range" type="range" min="0" max="2" step="1" value="1">
-        <output id="level-value" for="level-range">중급</output>
+          <div class="field-group">
+            <label for="learning-title-input">학습 설정 이름 *</label>
 
-        <label><input type="checkbox" id="example-option">예문 학습 포함</label>
-        <fieldset id="example-options" hidden>
-          <legend>예문 학습 방식</legend>
-          <label><input type="radio" name="example-type" value="together" checked>뜻과 예문 함께 보기</label>
-          <label><input type="radio" name="example-type" value="after">뜻 확인 후 예문 보기</label>
-        </fieldset>
-        <div class="step-actions">
-          <button id="option-prev" type="button">이전</button>
-          <button id="option-next" type="button">내용 확인하기</button>
-        </div>
-      </section>
+            <input
+              id="learning-title-input"
+              name="learningTitle"
+              type="text"
+              minlength="2"
+              maxlength="30"
+              placeholder="예: 출근길 영어 단어 학습"
+              aria-describedby="title-help title-error"
+              required
+            >
 
-      <section class="step" data-step="3" hidden>
-        <h3>입력한 내용을 확인해 주세요.</h3>
-        <div class="summary-list">
-          <div><span>단어 개수</span><strong id="summary-count"></strong></div>
-          <div><span>단어 난이도</span><strong id="summary-level"></strong></div>
-          <div><span>예문 학습</span><strong id="summary-example"></strong></div>
-        </div>
-        <div class="step-actions">
-          <button id="summary-prev" type="button">수정하기</button>
-          <button id="finish-button" type="button">설정 완료하기</button>
-        </div>
-      </section>
+            <div class="field-meta">
+              <p id="title-help">2~30자로 입력해 주세요.</p>
+              <span id="title-count">0 / 30자</span>
+            </div>
 
+            <p id="title-error" class="error-message"
+              aria-live="polite"></p>
+          </div>
+
+          <div class="field-group">
+            <label for="word-count">학습할 단어 개수 *</label>
+
+            <input
+              id="word-count"
+              name="wordCount"
+              type="number"
+              min="1"
+              max="20"
+              step="1"
+              placeholder="1~20 사이의 정수"
+              aria-describedby="count-help count-error"
+              required
+            >
+
+            <p id="count-help">한 번에 1~20개의 단어를 학습할 수 있어요.</p>
+
+            <p id="count-error" class="error-message"
+              aria-live="polite"></p>
+          </div>
+
+          <div class="step-actions">
+            <button id="count-next" type="button">
+              학습 조건 선택하기
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 2 -->
+        <section class="step" data-step="2" hidden>
+          <h3>나에게 맞는 학습 조건을 선택해 주세요.</h3>
+
+          <div class="field-group">
+            <label for="level-range">단어 난이도</label>
+
+            <input
+              id="level-range"
+              type="range"
+              min="0"
+              max="2"
+              step="1"
+              value="1"
+            >
+
+            <output id="level-value" for="level-range">중급</output>
+
+            <p>초급 · 중급 · 고급 중 선택할 수 있어요.</p>
+          </div>
+
+          <div class="field-group">
+            <label class="option-label">
+              <input
+                type="checkbox"
+                id="example-option"
+                aria-controls="example-options"
+                aria-expanded="false"
+              >
+              예문 학습 포함
+            </label>
+
+            <p>단어의 뜻과 함께 예문도 학습할 수 있어요.</p>
+
+            <fieldset id="example-options" hidden disabled>
+              <legend>예문 학습 방식</legend>
+
+              <label>
+                <input type="radio"
+                      name="example-type"
+                      value="together"
+                      checked>
+                뜻과 예문 함께 보기
+              </label>
+
+              <label>
+                <input type="radio"
+                      name="example-type"
+                      value="after">
+                뜻 확인 후 예문 보기
+              </label>
+            </fieldset>
+          </div>
+
+          <div class="step-actions">
+            <button id="option-prev" type="button">이전</button>
+            <button id="option-next" type="button">내용 확인하기</button>
+          </div>
+        </section>
+
+        <!-- STEP 3 -->
+        <section class="step" data-step="3" hidden>
+          <h3>입력한 학습 설정을 확인해 주세요.</h3>
+
+          <div class="summary-list">
+            <div>
+              <span>학습 설정 이름</span>
+              <strong id="summary-title"></strong>
+            </div>
+
+            <div>
+              <span>단어 개수</span>
+              <strong id="summary-count"></strong>
+            </div>
+
+            <div>
+              <span>단어 난이도</span>
+              <strong id="summary-level"></strong>
+            </div>
+
+            <div>
+              <span>예문 학습</span>
+              <strong id="summary-example"></strong>
+            </div>
+          </div>
+
+          <p id="submit-status" aria-live="polite"></p>
+
+          <div class="step-actions">
+            <button id="summary-prev" type="button">수정하기</button>
+            <button id="finish-button" type="submit">
+              학습 설정 저장하기
+            </button>
+          </div>
+        </section>
+
+      </form>
+
+      <!-- 저장 완료 -->
       <section class="step complete-step" data-step="4" hidden>
-        <h3>학습 설정이 완료되었습니다.</h3>
-        <p>설정한 조건으로 영어 단어 학습을 시작할 수 있습니다.</p>
+        <h3>학습 설정이 저장되었습니다!</h3>
+        <p>저장한 설정으로 영어 단어 학습을 시작할 수 있어요.</p>
 
         <div class="complete-actions">
           <button id="begin-study" type="button">
@@ -261,11 +350,30 @@
           </button>
 
           <button id="restart-button" type="button">
-            다시 설정하기
+            새로운 학습 설정 만들기
           </button>
         </div>
       </section>
-            
+
+    </section>
+
+    <!-- 내 학습 설정 -->
+    <section id="my-learning-settings" class="my-learning-settings">
+
+      <div class="my-settings-heading">
+        <h2>내 학습 설정</h2>
+        <p>저장한 학습 설정을 확인하고 학습을 시작해 보세요.</p>
+      </div>
+
+      <div id="saved-settings-list" class="saved-settings-list">
+        <!-- JavaScript에서 저장된 설정 카드 표시 -->
+      </div>
+
+      <p id="settings-empty-message">
+        아직 저장된 학습 설정이 없습니다.
+        새로운 학습 설정을 만들어 보세요.
+      </p>
+
     </section>
 
     <!-- 오늘의 단어 학습 -->
@@ -367,7 +475,7 @@
           학습 계속하기
         </button>
         <button id="study-settings-change" type="button">
-          설정 변경하기
+          새로 설정하기
         </button>
       </div>
     </dialog>
