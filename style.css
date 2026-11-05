@@ -29,29 +29,6 @@ img {
     border-radius: 16px;
 }
 
-header {
-    padding-top: 48px;
-    padding-bottom: 32px;
-}
-
-/* 헤더 소개 문구 */
-.header-slogan {
-    display: block;
-    color: #282F48;
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
-body.dark .header-slogan {
-    color: #F2A93B;
-}
-
-.header-description {
-    max-width: 800px;
-    line-height: 1.8;
-}
-
 /* 이용 방법 */
 .steps-list {
     display: grid;
@@ -109,20 +86,130 @@ footer {
     padding-bottom: 32px;
 }
 
-nav {
-    display: flex;
+/* 헤더 전체 */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 
-    /* 메뉴가 들어갈 자리가 부족하면 다음줄로 이동 */
-    flex-wrap: wrap;
+    max-width: none;
+    padding: 0 24px;
 
-    gap: 24px;
-    margin-top: 24px;
+    background-color: #FFFCF5;
+    border-bottom: 1px solid #F5E4B5;
 }
 
-nav a {
-    color: #5b5879;
-    font-weight: 700;
+/* 로고, 메뉴, 다크 모드 가로 배치 */
+.header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+/* WordMate 로고 */
+.header-logo {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.header-logo a {
+    color: #282F48;
     text-decoration: none;
+}
+
+.header-logo span {
+    color: #F2A93B;
+}
+
+/* 헤더 메뉴 */
+.header-nav {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+
+    margin-left: auto;
+}
+
+.header-nav a {
+    color: #596174;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.header-nav a:hover {
+    color: #D98A1B;
+}
+
+.header-nav a:focus-visible,
+.header-logo a:focus-visible {
+    outline: 2px solid #F2A93B;
+    outline-offset: 4px;
+}
+
+/* 다크 모드 버튼 */
+.header-theme-button {
+    flex-shrink: 0;
+    width: auto;
+    min-height: 38px;
+    padding: 8px 14px;
+
+    background-color: #FFFFFF;
+    color: #282F48;
+    border: 1px solid #F5E4B5;
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.header-theme-button:hover {
+    background-color: #FFF3D7;
+}
+
+/* 헤더 다크 모드 */
+body.dark .site-header {
+    background-color: #20232E;
+    border-color: #454A5B;
+}
+
+body.dark .header-logo a {
+    color: #F4F1EA;
+}
+
+body.dark .header-nav a {
+    color: #C9CBD5;
+}
+
+body.dark .header-nav a:hover {
+    color: #F2A93B;
+}
+
+body.dark .header-theme-button {
+    background-color: #343846;
+    color: #F4F1EA;
+    border-color: #454A5B;
+}
+
+body.dark .header-theme-button:hover {
+    background-color: #454A5B;
+}
+
+/* 메뉴 클릭 시 헤더에 제목이 가리지 않도록 */
+html {
+    scroll-padding-top: 110px;
 }
 
 h1 {
@@ -687,47 +774,163 @@ body.dark #study-settings-dialog {
     color: #FFFFFF;
 }
 
+/* ========================================
+   헤더 - 햄버거 메뉴
+======================================== */
+
+/* 헤더 오른쪽 버튼 영역 */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* PC에서는 햄버거 버튼 숨김 */
+.header-menu-button {
+    display: none;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: #FFFFFF;
+    color: #282F48;
+    border: 1px solid #F5E4B5;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.menu-icon {
+    font-size: 23px;
+    line-height: 1;
+}
+
+/* 태블릿 및 모바일 : 1024px 이하 */
+@media (max-width: 1024px) {
+
+    .site-header {
+        padding: 0 24px;
+    }
+
+    .header-inner {
+        position: relative;
+        flex-wrap: nowrap;
+        gap: 12px;
+    }
+
+    .header-logo {
+        flex-shrink: 0;
+    }
+
+    .header-actions {
+        margin-left: auto;
+    }
+
+    /* 햄버거 버튼 표시 */
+    .header-menu-button {
+        display: flex;
+    }
+
+    /* 기본 상태에서는 메뉴 숨김 */
+    .header-nav {
+        display: none;
+
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+
+        margin: 0;
+        padding: 12px;
+
+        background-color: #FFFCF5;
+        border: 1px solid #F5E4B5;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 햄버거 버튼 클릭 시 메뉴 표시 */
+    .header-nav.is-open {
+        display: flex;
+    }
+
+    .header-nav a {
+        display: block;
+        padding: 12px 14px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    .header-nav a:hover {
+        background-color: #FFF3D7;
+    }
+
+    /* 다크 모드 버튼은 항상 표시 */
+    .header-theme-button {
+        width: auto;
+        min-height: 40px;
+    }
+
+    /* 다크 모드에서 메뉴 색상 */
+    body.dark .header-nav {
+        background-color: #20232E;
+        border-color: #454A5B;
+    }
+
+    body.dark .header-nav a:hover {
+        background-color: #343846;
+    }
+
+    body.dark .header-menu-button {
+        background-color: #343846;
+        color: #F4F1EA;
+        border-color: #454A5B;
+    }
+}
+
 /* 웹페이지가 표시되는 가로 폭이 768px 이하일 때만 적용 */
 @media (max-width: 768px){
     body{
         font-size: 16px;
     }
 
-    header{
-        padding-top: 32px;
-        padding-bottom: 24px;
-    }
-
-    .header-slogan {
-        font-size: 22px;
-    }
-
-    section{
-        margin-top: 40px;
-    }
-
-    h1{
-        font-size: 36px;
-    }
-
     h2{
         font-size: 28px;
     }
 
-    /* 가로 메뉴를 위에서 아래로 배치 */
-    nav{
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
-
-    nav a{
-        /* 링크 글자 주변에도 누를 수 있는 여백 추가 */
-        padding: 8px 0;
-    }
-
     .feature-list{
         grid-template-columns: 1fr;
+    }
+
+    .site-header {
+        padding: 0 16px;
+    }
+
+    .header-inner {
+        padding: 12px 0;
+    }
+
+    .header-logo {
+        font-size: 24px;
+    }
+
+    .header-theme-button {
+        width: auto;
+        min-height: 40px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .header-menu-button {
+        width: 40px;
+        min-height: 40px;
     }
 
     /* 이메일 입력창과 버튼도 한 열로 배치 */
@@ -850,5 +1053,21 @@ body.dark #study-settings-dialog {
 
     #unfinished-dialog .dialog-actions button {
         width: 100%;
+    }
+}
+
+/* 작은 모바일 : 480px 이하 */
+@media (max-width: 480px) {
+
+    .header-logo {
+        font-size: 22px;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+
+    .header-theme-button {
+        padding: 8px 10px;
     }
 }

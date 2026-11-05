@@ -51,10 +51,53 @@ const startButton = document.querySelector("#startButton");
 function handleThemeClick() {
     const isDark = document.body.classList.toggle("dark");
 
-    themeButton.textContent = isDark ? "라이트 테마로 바꾸기" : "다크 테마로 바꾸기"
+    themeButton.textContent = isDark ? "라이트 모드" : "다크 모드";
+
+    themeButton.setAttribute("aria-pressed", String(isDark));
 }
 
 themeButton.addEventListener("click", handleThemeClick);
+
+
+/* 모바일 햄버거 메뉴 */
+const menuButton = document.querySelector("#menuButton");
+const headerNav = document.querySelector("#header-nav");
+
+/* 메뉴 열기 및 닫기 */
+function handleMenuClick() {
+    const isOpen = headerNav.classList.toggle("is-open");
+
+    menuButton.setAttribute("aria-expanded", String(isOpen));
+    menuButton.setAttribute("aria-label", isOpen ? "메뉴 닫기" : "메뉴 열기");
+
+    const menuIcon = menuButton.querySelector(".menu-icon");
+    menuIcon.textContent = isOpen ? "✕" : "☰";
+}
+
+menuButton.addEventListener("click", handleMenuClick);
+
+/* 메뉴 선택 후 자동 닫기 */
+const headerLinks = document.querySelectorAll(".header-nav a");
+
+headerLinks.forEach(function (link) {
+    link.addEventListener("click", function () {
+        headerNav.classList.remove("is-open");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "메뉴 열기");
+        menuButton.querySelector(".menu-icon").textContent = "☰";
+    });
+});
+
+/* PC 화면으로 변경하면 메뉴 상태 초기화 */
+window.addEventListener("resize", function () {
+    if (window.innerWidth > 1024) {
+        headerNav.classList.remove("is-open");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "메뉴 열기");
+        menuButton.querySelector(".menu-icon").textContent = "☰";
+    }
+});
+
 
 function handleNicknameInput() {
     const maxLength = nicknameInput.maxLength;
