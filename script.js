@@ -401,6 +401,7 @@ function renderSavedSettings() {
     });
 }
 
+
 /* 폼 제출 및 저장 */
 learningForm.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -412,13 +413,20 @@ learningForm.addEventListener("submit", function (event) {
 
     if (!titleValid || !countValid) {
         showStep(0);
+
+        if (!titleValid) {
+            titleInput.focus();
+        } else {
+            countInput.focus();
+        }
+
         return;
     }
 
     isSubmitting = true;
     finishButton.disabled = true;
     finishButton.textContent = "저장 중...";
-    submitStatus.textContent = "학습 설정을 저장하고 있습니다.";
+    submitStatus.textContent = "학습 설정을 저장하고 있습니다...";
 
     const newSetting = {
         id: Date.now().toString(),
@@ -429,32 +437,35 @@ learningForm.addEventListener("submit", function (event) {
         exampleType: formData.exampleType
     };
 
-    try {
-        const updated = [...savedSettings, newSetting];
+    setTimeout(function () {
+        try {
+            const updated = [...savedSettings, newSetting];
 
-        localStorage.setItem(storageKey, JSON.stringify(updated));
+            localStorage.setItem(storageKey, JSON.stringify(updated));
 
-        savedSettings = updated;
-        isStudyConfigured = true;
+            savedSettings = updated;
+            isStudyConfigured = true;
 
-        renderSavedSettings();
-        showStep(3);
+            renderSavedSettings();
+            showStep(3);
 
-        studyReadyMessage.textContent =
-            formData.level + " 난이도의 영어 단어 " +
-            formData.count + "개를 학습할 수 있습니다.";
+            studyReadyMessage.textContent =
+                formData.level + " 난이도의 영어 단어 " +
+                formData.count + "개를 학습할 수 있습니다.";
 
-        studyReadyButton.textContent = "오늘의 단어 학습 시작하기";
-        submitStatus.textContent = "";
+            studyReadyButton.textContent = "오늘의 단어 학습 시작하기";
+            submitStatus.textContent = "";
 
-    } catch (error) {
-        submitStatus.textContent =
-            "저장에 실패했습니다. 브라우저 저장 공간을 확인해 주세요.";
-    } finally {
-        isSubmitting = false;
-        finishButton.disabled = false;
-        finishButton.textContent = "학습 설정 저장하기";
-    }
+        } catch (error) {
+            submitStatus.textContent =
+                "저장에 실패했습니다. 브라우저 저장 공간을 확인한 후 다시 시도해 주세요.";
+
+        } finally {
+            isSubmitting = false;
+            finishButton.disabled = false;
+            finishButton.textContent = "학습 설정 저장하기";
+        }
+    }, 600);
 });
 
 /* 새로운 학습 설정 만들기 */
