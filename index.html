@@ -29,14 +29,16 @@
       </h1>
 
       <nav id="header-nav" class="header-nav" aria-label="주요 메뉴">
-        <a href="#about">서비스 소개</a>
-        <a href="#features">기능 소개</a>
-        <a href="#steps">이용 방법</a>
-        <a href="#learning-flow">학습 설정</a>
-        <a href="#my-learning-settings">내 학습 설정</a>
-        <a href="#word-learning">오늘의 단어</a>
-        <a href="#subscribe">문의하기</a>
-      </nav>
+        <ul>
+            <li><a href="#about">서비스 소개</a></li>
+            <li><a href="#features">기능 소개</a></li>
+            <li><a href="#steps">이용 방법</a></li>
+            <li><a href="#learning-flow">학습 설정</a></li>
+            <li><a href="#my-learning-settings">내 학습 설정</a></li>
+            <li><a href="#word-learning">오늘의 단어</a></li>
+            <li><a href="#subscribe">문의하기</a></li>
+        </ul>
+    </nav>
 
       <div class="header-actions">
         <button id="themeButton" class="header-theme-button"
@@ -50,6 +52,7 @@
                 aria-controls="header-nav"
                 aria-expanded="false">
           <span class="menu-icon" aria-hidden="true">☰</span>
+          <span class="menu-text" aria-hidden="true">메뉴</span>
         </button>
       </div>
     </div>
@@ -444,23 +447,22 @@
 
       </div>
 
-    </section>
+      <!-- 학습 완료 화면 -->
+      <div id="study-complete" class="study-complete" hidden>
+        <h3>오늘의 단어 학습 완료!</h3>
+        <p id="study-complete-message"></p>
 
-    <!-- 학습 완료 화면 -->
-    <section id="study-complete" class="study-complete" hidden>
-      <h2>오늘의 단어 학습 완료!</h2>
-      <p id="study-complete-message"></p>
-
-      <div class="study-actions">
-        <button id="study-repeat" type="button">
-          학습한 단어 다시 학습하기
-        </button>
-        <button id="study-new" type="button">
-          새로운 단어로 학습하기
-        </button>
-        <button id="study-reset" type="button">
-          설정 다시 하기
-        </button>
+        <div class="study-actions">
+          <button id="study-repeat" type="button">
+            학습한 단어 다시 학습하기
+          </button>
+          <button id="study-new" type="button">
+            새로운 단어로 학습하기
+          </button>
+          <button id="study-reset" type="button">
+            설정 다시 하기
+          </button>
+        </div>
       </div>
     </section>
 

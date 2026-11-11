@@ -66,6 +66,8 @@ function handleMenuClick() {
     menuButton.setAttribute("aria-label", isOpen ? "메뉴 닫기" : "메뉴 열기");
 
     const menuIcon = menuButton.querySelector(".menu-icon");
+    const menuText = menuButton.querySelector(".menu-text");
+    menuText.textContent = isOpen ? "닫기" : "메뉴";
     menuIcon.textContent = isOpen ? "✕" : "☰";
 }
 
@@ -74,12 +76,90 @@ menuButton.addEventListener("click", handleMenuClick);
 /* 메뉴 선택 후 자동 닫기 */
 const headerLinks = document.querySelectorAll(".header-nav a");
 
+/* 현재 위치 메뉴 표시 */
+/* 스크롤 위치에 따라 현재 메뉴 표시 */
+function updateActiveMenu() {
+    const header = document.querySelector(".site-header");
+    const position = header.getBoundingClientRect().bottom + 80;
+
+    let currentId = "about";
+
+    /* 메뉴에 연결된 영역만 확인 */
+    headerLinks.forEach(function (link) {
+        const targetId = link.getAttribute("href");
+        const section = document.querySelector(targetId);
+
+        if (!section || section.hidden) return;
+
+        const sectionTop = section.getBoundingClientRect().top;
+
+        if (sectionTop <= position) {
+            currentId = section.id;
+        }
+    });
+
+    /* 페이지 맨 아래에서는 마지막 메뉴 강조 */
+    const isAtBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 5;
+
+    if (isAtBottom) {
+        currentId = "subscribe";
+    }
+
+    /* 현재 메뉴 강조 및 접근성 속성 적용 */
+    headerLinks.forEach(function (link) {
+        const isCurrent =
+            link.getAttribute("href") === "#" + currentId;
+
+        link.classList.toggle("is-active", isCurrent);
+
+        if (isCurrent) {
+            link.setAttribute("aria-current", "location");
+        } else {
+            link.removeAttribute("aria-current");
+        }
+    });
+}
+
+/* 스크롤할 때 현재 메뉴 갱신 */
+let scrollScheduled = false;
+
+window.addEventListener("scroll", function () {
+    if (scrollScheduled) return;
+
+    scrollScheduled = true;
+
+    requestAnimationFrame(function () {
+        updateActiveMenu();
+        scrollScheduled = false;
+    });
+});
+
+/* 페이지 최초 접속 및 새로고침 */
+window.addEventListener("load", updateActiveMenu);
+
+/* 메뉴 이동 및 뒤로 가기 */
+window.addEventListener("hashchange", function () {
+    requestAnimationFrame(updateActiveMenu);
+});
+
+window.addEventListener("popstate", function () {
+    requestAnimationFrame(updateActiveMenu);
+});
+
+/* 초기 메뉴 상태 표시 */
+updateActiveMenu();
+
+/* 메뉴 선택 후 모바일 메뉴 닫기 */
 headerLinks.forEach(function (link) {
     link.addEventListener("click", function () {
         headerNav.classList.remove("is-open");
+
         menuButton.setAttribute("aria-expanded", "false");
         menuButton.setAttribute("aria-label", "메뉴 열기");
         menuButton.querySelector(".menu-icon").textContent = "☰";
+        menuButton.querySelector(".menu-text").textContent = "메뉴";
     });
 });
 
@@ -90,6 +170,7 @@ window.addEventListener("resize", function () {
         menuButton.setAttribute("aria-expanded", "false");
         menuButton.setAttribute("aria-label", "메뉴 열기");
         menuButton.querySelector(".menu-icon").textContent = "☰";
+        menuButton.querySelector(".menu-text").textContent = "메뉴";
     }
 });
 
@@ -715,13 +796,14 @@ const reviewUnfinished = document.querySelector("#review-unfinished");
 const finishAnyway = document.querySelector("#finish-anyway");
 
 function completeStudy() {
+    studyReady.hidden = true;
     studyContent.hidden = true;
     studyComplete.hidden = false;
 
     document.querySelector("#study-complete-message").textContent =
         `${selectedWords.length}개의 영어 단어 학습을 완료했습니다.`;
 
-    studyComplete.scrollIntoView({ behavior: "smooth" });
+    wordLearning.scrollIntoView({ behavior: "smooth" });
 }
 
 function checkUnfinishedWords() {

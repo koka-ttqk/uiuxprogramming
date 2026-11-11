@@ -139,16 +139,63 @@ footer {
     margin-left: auto;
 }
 
+/* 메뉴 목록 기본 스타일 제거 및 가로 배치 */
+.header-nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 18px;
+
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.header-nav li {
+    margin: 0;
+    padding: 0;
+}
+
+/* 헤더 메뉴 링크 */
 .header-nav a {
+    display: block;
+    padding: 10px 12px;
+
     color: #596174;
     font-size: 13px;
     font-weight: 600;
     text-decoration: none;
     white-space: nowrap;
+
+    border-radius: 8px;
+    border-bottom: 4px solid transparent;
+    transition: background-color 0.2s, color 0.2s;
 }
 
+/* 마우스를 올렸을 때 */
 .header-nav a:hover {
     color: #D98A1B;
+    background-color: #FFF3D7;
+}
+
+/* 현재 위치 메뉴 */
+.header-nav a.is-active {
+    color: #D98A1B;
+    background-color: #FFF3D7;
+    font-weight: 800;
+    border-bottom-color: #D98A1B;
+}
+
+/* 다크 모드 */
+body.dark .header-nav a:hover {
+    color: #F2A93B;
+    background-color: #343846;
+}
+
+body.dark .header-nav a.is-active {
+    color: #F2A93B;
+    background-color: #343846;
+    border-bottom-color: #F2A93B;
 }
 
 .header-nav a:focus-visible,
@@ -792,13 +839,31 @@ body.dark .learning-flow #level-value {
 }
 
 
-/* 학습 화면 */
-.word-learning,
-.study-complete {
+/* 오늘의 단어 전체 카드 */
+.word-learning {
     padding: 24px;
     border: 1px solid #F5E4B5;
     border-radius: 12px;
     background-color: #FFFFFF;
+}
+
+/* 학습 완료 영역 */
+.study-complete {
+    margin-top: 16px;
+    padding: 0;
+}
+
+/* 학습 완료 제목 */
+.study-complete h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* 학습 완료 안내 문구 */
+.study-complete p {
+    margin-top: 0;
 }
 
 .word-learning[hidden],
@@ -900,6 +965,7 @@ body.dark #study-ready {
     font-size: 16px;
 }
 
+/* 학습 버튼 영역 */
 .study-actions {
     display: flex;
     flex-wrap: wrap;
@@ -908,7 +974,9 @@ body.dark #study-ready {
 }
 
 .study-actions button {
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
 }
 
 #study-settings-dialog {
@@ -996,9 +1064,11 @@ body.dark #study-settings-dialog {
 /* PC에서는 햄버거 버튼 숨김 */
 .header-menu-button {
     display: none;
-    width: 40px;
+    width: auto;
+    min-width: 64px;
     height: 40px;
-    padding: 0;
+    padding: 0 10px;
+    gap: 5px;
 
     align-items: center;
     justify-content: center;
@@ -1008,6 +1078,11 @@ body.dark #study-settings-dialog {
     border: 1px solid #F5E4B5;
     border-radius: 10px;
     cursor: pointer;
+}
+
+.menu-text {
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .menu-icon {
@@ -1068,14 +1143,44 @@ body.dark #study-settings-dialog {
         display: flex;
     }
 
-    .header-nav a {
-        display: block;
-        padding: 12px 14px;
-        font-size: 14px;
-        border-radius: 8px;
+    /* 모바일 메뉴 목록 세로 배치 */
+    .header-nav ul {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
     }
 
+    .header-nav li {
+        width: 100%;
+    }
+
+    /* 모바일 현재 메뉴 */
+    .header-nav a.is-active {
+        color: #D98A1B;
+        background-color: #FFF3D7;
+        border-bottom: none;
+        border-left-color: #D98A1B;
+    }
+
+    body.dark .header-nav a.is-active {
+        color: #F2A93B;
+        background-color: #343846;
+        border-bottom: none;
+        border-left-color: #F2A93B;
+    }
+
+    /* 모바일 메뉴 */
+    .header-nav a {
+        display: block;
+        width: 100%;
+        padding: 12px 14px;
+        border-bottom: none;
+        border-left: 4px solid transparent;
+    }
+
+    /* 모바일 메뉴 hover */
     .header-nav a:hover {
+        color: #D98A1B;
         background-color: #FFF3D7;
     }
 
@@ -1091,7 +1196,9 @@ body.dark #study-settings-dialog {
         border-color: #454A5B;
     }
 
+    /* 모바일 다크 모드 */
     body.dark .header-nav a:hover {
+        color: #F2A93B;
         background-color: #343846;
     }
 
@@ -1099,6 +1206,18 @@ body.dark #study-settings-dialog {
         background-color: #343846;
         color: #F4F1EA;
         border-color: #454A5B;
+    }
+}
+
+/* 화면이 좁아지면 학습 완료 버튼 세로 배치 */
+@media (min-width: 769px) and (max-width: 900px) {
+    #study-complete .study-actions {
+        flex-direction: column;
+    }
+
+    #study-complete .study-actions button {
+        width: 100%;
+        flex: none;
     }
 }
 
@@ -1136,7 +1255,7 @@ body.dark #study-settings-dialog {
     }
 
     .header-menu-button {
-        width: 40px;
+        width: auto;
         min-height: 40px;
     }
 
@@ -1274,6 +1393,16 @@ body.dark #study-settings-dialog {
 
     #unfinished-dialog .dialog-actions button {
         width: 100%;
+    }
+
+    .study-complete .study-actions {
+        flex-direction: column;
+    }
+
+    .study-complete .study-actions button {
+        width: 100%;
+        flex: none;
+        white-space: nowrap;
     }
 }
 
