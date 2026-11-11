@@ -751,6 +751,68 @@ body.dark .learning-flow input.is-valid {
     color: #D98A1B;
 }
 
+/* 학습 설정 필터 */
+.settings-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 24px 0 16px;
+}
+
+/* 필터 버튼 기본 상태 */
+.settings-filter {
+    padding: 10px 20px;
+    background-color: #FFFFFF;
+    color: #596174;
+    border: 1px solid #D9CFAF;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* 필터 버튼 마우스 올리기 */
+.settings-filter:hover {
+    background-color: #FFF3D7;
+    color: #D98A1B;
+}
+
+/* 선택된 필터 버튼 */
+.settings-filter.is-active {
+    background-color: #F2A93B;
+    color: #292A31;
+    border-color: #D98A1B;
+    font-weight: 800;
+}
+
+/* 필터 결과 개수 */
+#settings-result-count {
+    margin: 0 0 20px;
+    color: #596174;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* 다크 모드 */
+body.dark .settings-filter {
+    background-color: #343846;
+    color: #F4F1EA;
+    border-color: #454A5B;
+}
+
+body.dark .settings-filter:hover {
+    background-color: #454A5B;
+}
+
+body.dark .settings-filter.is-active {
+    background-color: #F2A93B;
+    color: #292A31;
+    border-color: #F2A93B;
+}
+
+body.dark #settings-result-count {
+    color: #C9CBD5;
+}
+
 /* 내 학습 설정 */
 .my-learning-settings {
     margin-top: 56px;
@@ -1419,5 +1481,12 @@ body.dark #study-settings-dialog {
 
     .header-theme-button {
         padding: 8px 10px;
+    }
+
+    .settings-filter {
+        flex: 1;
+        min-width: 60px;
+        padding: 10px;
+        font-size: 14px;
     }
 }

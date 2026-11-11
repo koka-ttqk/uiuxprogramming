@@ -242,6 +242,12 @@ const submitStatus = document.querySelector("#submit-status");
 const savedSettingsList = document.querySelector("#saved-settings-list");
 const settingsEmptyMessage = document.querySelector("#settings-empty-message");
 
+/* 학습 설정 필터 */
+const settingsFilterButtons = document.querySelectorAll(".settings-filter");
+const settingsResultCount = document.querySelector("#settings-result-count");
+
+let selectedLevel = "전체";
+
 const levelValues = ["초급", "중급", "고급"];
 const storageKey = "wordmate-learning-settings";
 
@@ -255,6 +261,22 @@ const formData = {
 
 let savedSettings = [];
 let isSubmitting = false;
+
+/* 학습 설정 필터 선택 */
+settingsFilterButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+        selectedLevel = button.dataset.level;
+
+        settingsFilterButtons.forEach(function (item) {
+            const isSelected = item === button;
+
+            item.classList.toggle("is-active", isSelected);
+            item.setAttribute("aria-pressed", String(isSelected));
+        });
+
+        renderSavedSettings();
+    });
+});
 
 /* 단계 표시 */
 function showStep(index) {
@@ -424,9 +446,28 @@ function loadSavedSettings() {
 function renderSavedSettings() {
     savedSettingsList.replaceChildren();
 
-    settingsEmptyMessage.hidden = savedSettings.length > 0;
+    /* 선택한 난이도에 맞는 설정만 가져오기 */
+    const filteredSettings = savedSettings.filter(function (setting) {
+        return selectedLevel === "전체" || setting.level === selectedLevel;
+    });
 
-    savedSettings.forEach(function (setting) {
+    /* 현재 표시되는 결과 개수 */
+    settingsResultCount.textContent =
+        "현재 " + filteredSettings.length +
+        "개의 학습 설정이 표시되고 있습니다.";
+
+    /* 전체 목록이 없는 경우와 필터 결과가 없는 경우 구분 */
+    if (savedSettings.length === 0) {
+        settingsEmptyMessage.textContent =
+            "아직 저장된 학습 설정이 없습니다. 새로운 학습 설정을 만들어 보세요.";
+    } else if (filteredSettings.length === 0) {
+        settingsEmptyMessage.textContent =
+            selectedLevel + " 난이도로 저장된 학습 설정이 없습니다. 다른 난이도를 선택해 보세요.";
+    }
+
+    settingsEmptyMessage.hidden = filteredSettings.length > 0;
+
+    filteredSettings.forEach(function (setting) {
         const card = document.createElement("article");
         card.className = "saved-setting-card";
 
