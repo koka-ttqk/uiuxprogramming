@@ -489,15 +489,23 @@ body.dark .coming-soon {
     color: #F2D8A5;
 }
 
-body.dark .tab{
-    color: #e3d6bd;
+body.dark .tab {
+    color: #F4F1EA;
     background-color: #343846;
-    border-color: #454a5b;
+    border-color: #555B6D;
 }
 
-body.dark .tab.is-active{
-    color: #24212a;
-    border-color: #f2a93b;
+body.dark .tab:hover {
+    color: #FFFFFF;
+    background-color: #454A5B;
+}
+
+body.dark .tab.is-active {
+    color: #292A31;
+    background-color: #F2A93B;
+    border-color: #F2A93B;
+    border-bottom: 4px solid #D98A1B;
+    font-weight: 800;
 }
 
 body.dark .panel{
@@ -659,7 +667,8 @@ body.dark .learning-flow .error-message.is-valid {
     color: #8DE0AA;
 }
 
-body.dark .learning-flow input.is-valid {
+body.dark .learning-flow input[type="text"].is-valid,
+body.dark .learning-flow input[type="number"].is-valid {
     border-color: #65B884;
     background-color: #293D33;
 }
@@ -890,6 +899,24 @@ body.dark .learning-flow .progress__item.is-active {
     color: #292A31;
 }
 
+
+
+/* 다크 모드 - 학습 설정 STEP */
+body.dark .learning-flow .progress__item {
+    background-color: #414657;
+    border: 1px solid #687084;
+    color: #F4F1EA;
+    font-weight: 600;
+}
+
+/* 현재 진행 중인 STEP */
+body.dark .learning-flow .progress__item.is-active {
+    background-color: #E2AE50;
+    border: 2px solid #FFE0A5;
+    color: #292A31;
+    font-weight: 800;
+}
+
 body.dark .learning-flow input[type="text"],
 body.dark .learning-flow input[type="number"] {
     background-color: #292D39;
@@ -897,8 +924,10 @@ body.dark .learning-flow input[type="number"] {
     border-color: #555B6D;
 }
 
-body.dark .learning-flow input.has-error {
+body.dark .learning-flow input[type="text"].has-error,
+body.dark .learning-flow input[type="number"].has-error {
     border-color: #FF8995;
+    background-color: #482D37;
 }
 
 body.dark .learning-flow #level-value {
@@ -1162,6 +1191,11 @@ body.dark #study-settings-dialog {
 #about h2:focus,
 #steps h2:focus {
     outline: none;
+}
+
+/* 다크 모드 - 영역 제목 */
+body.dark h2 {
+    color: #F4F1EA;
 }
 
 /* 태블릿 및 모바일 : 1024px 이하 */

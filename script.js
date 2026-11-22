@@ -998,10 +998,9 @@ function returnToSettings() {
 
 document.querySelector("#study-reset").addEventListener("click", returnToSettings);
 
-// 현재 설정 확인
 document.querySelector("#study-settings-button").addEventListener("click", () => {
-    document.querySelector("#study-settings-summary").textContent =
-        `단어 ${formData.count}개 / 난이도 ${formData.level} / 예문 학습 ${
+    document.querySelector("#study-settings-summary").innerHTML =
+        `<strong>단어</strong> ${formData.count}개 / <strong>난이도</strong> ${formData.level} / <strong>예문 학습</strong> ${
             formData.example
                 ? (formData.exampleType === "together"
                     ? "뜻과 예문 함께 보기"
