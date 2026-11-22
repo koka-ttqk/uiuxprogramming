@@ -395,6 +395,12 @@ exampleOption.addEventListener("change", function () {
     exampleOptions.hidden = !checked;
     exampleOptions.disabled = !checked;
     exampleOption.setAttribute("aria-expanded", String(checked));
+
+    if (!checked) {
+        document.querySelector(
+            'input[name="example-type"][value="together"]'
+        ).checked = true;
+    }
 });
 
 /* 2단계 이동 */
