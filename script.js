@@ -76,6 +76,28 @@ menuButton.addEventListener("click", handleMenuClick);
 /* 메뉴 선택 후 자동 닫기 */
 const headerLinks = document.querySelectorAll(".header-nav a");
 
+
+/* WordMate 로고 클릭 시 초점 유지 */
+const headerLogo = document.querySelector(".header-logo a");
+
+headerLogo.addEventListener("click", function (event) {
+    // 브라우저의 기본 앵커 이동을 막음
+    event.preventDefault();
+
+    // 주소를 서비스 소개 영역으로 변경
+    history.pushState(null, "", "#about");
+
+    // 서비스 소개 영역으로 화면 이동
+    document.querySelector("#about").scrollIntoView();
+
+    // 키보드 초점은 WordMate 로고에 유지
+    headerLogo.focus({ preventScroll: true });
+
+    // 현재 메뉴 강조 갱신
+    updateActiveMenu();
+});
+
+
 /* 현재 위치 메뉴 표시 */
 /* 스크롤 위치에 따라 현재 메뉴 표시 */
 function updateActiveMenu() {
@@ -137,7 +159,46 @@ window.addEventListener("scroll", function () {
 });
 
 /* 페이지 최초 접속 및 새로고침 */
-window.addEventListener("load", updateActiveMenu);
+window.addEventListener("load", function () {
+    updateActiveMenu();
+
+    const navigation = performance.getEntriesByType("navigation")[0];
+
+    // 새로고침한 경우에만 실행
+    if (!navigation || navigation.type !== "reload") return;
+
+    requestAnimationFrame(function () {
+        updateActiveMenu();
+
+        // 현재 강조된 메뉴 찾기
+        const activeMenu = document.querySelector(
+            ".header-nav a.is-active"
+        );
+
+        if (!activeMenu) return;
+
+        // 메뉴와 연결된 실제 화면 영역 찾기
+        const targetId = activeMenu.getAttribute("href");
+        const targetSection = document.querySelector(targetId);
+
+        if (!targetSection) return;
+
+        // 현재 영역 안에서 Tab으로 이동할 수 있는 첫 번째 요소 찾기
+        const focusableElement = targetSection.querySelector(
+            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+
+        // 버튼이나 입력창이 없으면 해당 영역의 제목을 선택
+        const focusTarget = focusableElement || targetSection.querySelector(
+            'h2[tabindex="-1"]'
+        );
+
+        // 선택한 요소로 초점 이동
+        if (focusTarget) {
+            focusTarget.focus({ preventScroll: true });
+        }
+    });
+});
 
 /* 메뉴 이동 및 뒤로 가기 */
 window.addEventListener("hashchange", function () {
@@ -177,17 +238,20 @@ window.addEventListener("resize", function () {
 const tabs = document.querySelectorAll(".tab");
 const panels = document.querySelectorAll(".panel");
 
+/* 모든 탭과 패널 초기화 */
 function resetTabsAndPanels() {
     tabs.forEach(function (tab) {
         tab.classList.remove("is-active");
         tab.setAttribute("aria-selected", "false");
     });
+
     panels.forEach(function (panel) {
         panel.classList.remove("is-active");
         panel.hidden = true;
     });
 }
 
+/* 선택한 탭 활성화 */
 function activateTab(clickedTab) {
     const targetSelector = "#" + clickedTab.dataset.target;
     const targetPanel = document.querySelector(targetSelector);
@@ -199,15 +263,41 @@ function activateTab(clickedTab) {
     targetPanel.hidden = false;
 }
 
+/* 마우스로 탭 선택 */
 function handleTabClick(event) {
     resetTabsAndPanels();
     activateTab(event.currentTarget);
 }
 
+/* 키보드로 탭 선택 */
+function handleTabKeydown(event) {
+    const currentIndex = Array.from(tabs).indexOf(event.currentTarget);
+    let nextIndex = currentIndex;
+
+    if (event.key === "ArrowRight") {
+        nextIndex = (currentIndex + 1) % tabs.length;
+    } else if (event.key === "ArrowLeft") {
+        nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    } else if (event.key === "Home") {
+        nextIndex = 0;
+    } else if (event.key === "End") {
+        nextIndex = tabs.length - 1;
+    } else {
+        return;
+    }
+
+    event.preventDefault();
+
+    resetTabsAndPanels();
+    activateTab(tabs[nextIndex]);
+    tabs[nextIndex].focus();
+}
+
+/* 탭 이벤트 연결 */
 tabs.forEach(function (tab) {
     tab.addEventListener("click", handleTabClick);
+    tab.addEventListener("keydown", handleTabKeydown);
 });
-
 
 /* 영어 단어 학습 설정 */
 const learningFlow = document.querySelector("#learning-flow");
@@ -278,8 +368,63 @@ settingsFilterButtons.forEach(function (button) {
     });
 });
 
+
+/* 학습 난이도 필터 방향키 이동 */
+settingsFilterButtons.forEach(function (button, index) {
+    button.addEventListener("keydown", function (event) {
+        let nextIndex;
+
+        if (event.key === "ArrowRight") {
+            nextIndex = (index + 1) % settingsFilterButtons.length;
+        } else if (event.key === "ArrowLeft") {
+            nextIndex = (index - 1 + settingsFilterButtons.length) % settingsFilterButtons.length;
+        } else {
+            return;
+        }
+
+        event.preventDefault();
+        settingsFilterButtons[nextIndex].focus();
+        settingsFilterButtons[nextIndex].click();
+    });
+});
+
+/* 학습 설정 버튼 방향키 이동 */
+function handleStepButtonArrowKeys(event) {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+        return;
+    }
+
+    const buttonGroup = event.currentTarget;
+    const buttons = Array.from(buttonGroup.querySelectorAll("button"));
+
+    const currentIndex = buttons.indexOf(document.activeElement);
+
+    if (currentIndex === -1) return;
+
+    event.preventDefault();
+
+    let nextIndex;
+
+    if (event.key === "ArrowRight") {
+        nextIndex = (currentIndex + 1) % buttons.length;
+    } else {
+        nextIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+    }
+
+    buttons[nextIndex].focus();
+}
+
+/* 학습 설정 버튼에 방향키 이벤트 연결 */
+const stepButtonGroups = learningFlow.querySelectorAll(
+    ".step-actions, .complete-actions"
+);
+
+stepButtonGroups.forEach(function (group) {
+    group.addEventListener("keydown", handleStepButtonArrowKeys);
+});
+
 /* 단계 표시 */
-function showStep(index) {
+function showStep(index, moveFocus = false) {
     flowSteps.forEach(function (step, i) {
         step.hidden = i !== index;
     });
@@ -287,7 +432,38 @@ function showStep(index) {
     progressItems.forEach(function (item, i) {
         item.classList.toggle("is-active", i === index && i < 3);
     });
+
+    if (moveFocus) {
+        if (index === 0) {
+            titleInput.focus();
+        } else if (index === 1) {
+            levelRange.focus();
+        } else if (index === 2) {
+            summaryPrev.focus();
+        } else if (index === 3) {
+            restartButton.focus();
+        }
+    }
 }
+
+/* Enter 키로 학습 설정 단계 이동 */
+learningForm.addEventListener("keydown", function (event) {
+    if (event.key !== "Enter") return;
+
+    // 한글 입력 중 Enter 키는 처리하지 않음
+    if (event.isComposing) return;
+
+    // 버튼에 초점이 있으면 해당 버튼의 기능을 실행
+    if (event.target.closest("button")) return;
+
+    // STEP 1의 입력창에서만 Enter로 다음 단계 이동
+    const step1 = flowSteps[0];
+
+    if (!step1.hidden && step1.contains(event.target)) {
+        event.preventDefault();
+        countNext.click();
+    }
+});
 
 
 /* 입력 상태 표시 */
@@ -380,7 +556,7 @@ countNext.addEventListener("click", function () {
         return;
     }
 
-    showStep(1);
+    showStep(1, true);
 });
 
 /* 난이도 변경 */
@@ -403,9 +579,17 @@ exampleOption.addEventListener("change", function () {
     }
 });
 
+/* Enter 키로 예문 학습 체크박스 선택 */
+exampleOption.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        exampleOption.click();
+    }
+});
+
 /* 2단계 이동 */
 optionPrev.addEventListener("click", function () {
-    showStep(0);
+    showStep(0, true);
 });
 
 optionNext.addEventListener("click", function () {
@@ -428,12 +612,12 @@ optionNext.addEventListener("click", function () {
             : "뜻 확인 후 예문 보기")
         : "미포함";
 
-    showStep(2);
+    showStep(2, true);
 });
 
 /* 3단계 → 2단계 */
 summaryPrev.addEventListener("click", function () {
-    showStep(1);
+    showStep(1, true);
 });
 
 /* 저장한 학습 설정 불러오기 */
@@ -536,6 +720,9 @@ learningForm.addEventListener("submit", function (event) {
 
     if (isSubmitting) return;
 
+    // STEP 3이 아니면 저장하지 않음
+    if (flowSteps[2].hidden) return;
+
     const titleValid = validateTitle();
     const countValid = validateCount();
 
@@ -575,7 +762,7 @@ learningForm.addEventListener("submit", function (event) {
             isStudyConfigured = true;
 
             renderSavedSettings();
-            showStep(3);
+            showStep(3, true);
 
             studyReadyMessage.textContent =
                 formData.level + " 난이도의 영어 단어 " +

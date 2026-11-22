@@ -425,6 +425,12 @@ body.dark .subscribe-card{
     font-weight: 700;
 }
 
+/* 키보드로 탭 선택 시 초점 표시 */
+.tab:focus-visible {
+    outline: 3px solid #59627F;
+    outline-offset: 3px;
+}
+
 .panel{
     padding: 24px;
     border: 1px solid #f5e4b5;
@@ -1150,6 +1156,12 @@ body.dark #study-settings-dialog {
 .menu-icon {
     font-size: 23px;
     line-height: 1;
+}
+
+/* 새로고침 후 제목에 표시되는 초점 테두리 제거 */
+#about h2:focus,
+#steps h2:focus {
+    outline: none;
 }
 
 /* 태블릿 및 모바일 : 1024px 이하 */
